@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int maCart;
+    @Column(name = "maCart")
+    private long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "accountId")

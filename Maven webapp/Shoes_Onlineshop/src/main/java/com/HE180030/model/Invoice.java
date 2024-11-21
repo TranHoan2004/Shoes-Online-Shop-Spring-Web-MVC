@@ -17,9 +17,14 @@ import java.util.Date;
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int maHD;
-    private double tongGia;
-    private Date ngayXuat;
+    @Column(name = "maHD")
+    private long id;
+
+    @Column(name = "tongGia")
+    private double totalPrice;
+
+    @Column(name = "ngayXuat")
+    private Date exportDate;
 
     @Transient
     private String context;

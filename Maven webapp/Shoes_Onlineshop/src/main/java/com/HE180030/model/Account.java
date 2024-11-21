@@ -18,13 +18,13 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "uID")
-    private int id;
+    private long id;
 
-    @Column(name = "user", length = 10)
+    @Column(name = "user", length = 10, nullable = false)
     private String username;
 
-    @Column(name = "pass", length = 10)
-    private String passowrd;
+    @Column(name = "pass", length = 10, nullable = false)
+    private String password;
 
     private int isSell;
     private int isAdmin;

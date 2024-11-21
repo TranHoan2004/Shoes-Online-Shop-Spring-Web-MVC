@@ -5,23 +5,25 @@ import com.HE180030.model.Cart;
 import java.util.List;
 
 public interface CartRepository {
-    void insertCart(int accountID, int productID, int amount, String size);
+//    void insertCart(long accountID, long productID, int amount, String size);
 
-    void deleteCartByProductID(String productID);
+    void updateAmountCart(long accountID, long productID, int amount);
 
-    void deleteCartByAccountID(int id);
+    void deleteCartByProductID(long productID);
 
-    List<Cart> getCartByAccountID(int accountID);
+    void deleteCartByAccountID(long id);
 
-    String getAmountCart(String username);
+    List<Cart> getCartByAccountID(long accountID);
 
-    void updateAmountCart(int accountID, int productID, int amount);
+//    String getAmountCart(String username);
 
-    void deleteCart(int productID);
+    Cart getCartByAccountIdAndProductId(long accountID, long productID, String size);
 
-    void createCart(int accountID, int productID, int amount, String size);
+    void createCart(long accountID, long productID, int amount, String size);
 
-    void createAmountAndSizeCart(int accountID, int productID, int amount, String size);
+    void createAmountAndSizeCart(long accountID, long productID, int amount, String size);
 
-    Cart getCart(int accountID, int productID, String size);
+    void editAmountAndSizeCart(long accountID, long productID, int amount, String size);
+
+    void editAmountCart(long accountID, long productID, int amount);
 }

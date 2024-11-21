@@ -17,7 +17,7 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(length = 200)
     private String name;
@@ -54,4 +54,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Cart> carts;
+
+    @ManyToOne
+    @JoinColumn(name = "sell_ID")
+    private Account account;
 }
