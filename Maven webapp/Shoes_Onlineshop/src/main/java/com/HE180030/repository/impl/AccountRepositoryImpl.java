@@ -21,19 +21,14 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public List<Account> getAllAccount() {
+    public List<Account> getAll() {
         return sessionFactory.getCurrentSession().createQuery("from Account", Account.class).getResultList();
     }
 
     @Override
-    public Account getAccountById(long id) {
+    public Account getById(long id) {
         return sessionFactory.getCurrentSession().get(Account.class, id);
     }
-
-//    @Override
-//    public void updateProfile(String username, String password) {
-//        sessionFactory.getCurrentSession().merge()
-//    }
 
     @Override
     public Account login(String username, String password) {
@@ -51,7 +46,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void insertAccount(String user, String pass, int isSell, int isAdmin, String email) {
+    public void insert(String user, String pass, boolean isSell, boolean isAdmin, String email) {
         Account account = new Account();
         account.setUsername(user);
         account.setPassword(pass);
@@ -62,7 +57,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public List<Account> getListByPageAccount(List<Account> list, int start, int end) {
+    public List<Account> getListByPage(List<Account> list, int start, int end) {
 //        List<Account> arr = new ArrayList<>();
 //        for (int i = start; i < end; i++) {
 //            arr.add(list.get(i));
@@ -74,14 +69,14 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void deleteAccountByID(long id) {
-        Account account = getAccountById(id);
+    public void deleteByID(long id) {
+        Account account = getById(id);
         sessionFactory.getCurrentSession().remove(account);
     }
 
     @Override
-    public void editAccount(String username, String password, int isSell, int isAdmin, String email, long id) {
-        Account account = getAccountById(id);
+    public void edit(String username, String password, boolean isSell, boolean isAdmin, String email, long id) {
+        Account account = getById(id);
         account.setUsername(username);
         account.setPassword(password);
         account.setIsSell(isSell);
@@ -92,7 +87,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void updateProfile(String username, String password, String email, long id) {
-        Account account = getAccountById(id);
+        Account account = getById(id);
         account.setUsername(username);
         account.setPassword(password);
         account.setEmail(email);
@@ -112,17 +107,5 @@ public class AccountRepositoryImpl implements AccountRepository {
         return sessionFactory.getCurrentSession().createQuery("select a.id from Account a where a.username=:username", Integer.class)
                 .setParameter("username", username)
                 .uniqueResult();
-    }
-
-    @Override
-    public List<Account> getListAccountsByPage(List<Account> list, int start, int end) {
-//        List<Account> arr = new ArrayList<>();
-//        for (int i = start; i < end; i++) {
-//            arr.add(list.get(i));
-//        }
-        return sessionFactory.getCurrentSession().createQuery("from Account", Account.class)
-                .setFirstResult(start)
-                .setMaxResults(end)
-                .getResultList();
     }
 }

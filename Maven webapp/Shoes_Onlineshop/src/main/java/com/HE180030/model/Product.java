@@ -49,11 +49,17 @@ public class Product {
     private String image4;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cateid")
+    @JoinColumn(name = "cateID")
     private Category category;
 
     @OneToMany(mappedBy = "product")
     private List<Cart> carts;
+
+    @OneToMany(mappedBy = "product")
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product")
+    private List<QuantitesSold> quantitesSold;
 
     @ManyToOne
     @JoinColumn(name = "sell_ID")

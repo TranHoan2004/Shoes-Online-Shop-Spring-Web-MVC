@@ -20,24 +20,33 @@ public class Account {
     @Column(name = "uID")
     private long id;
 
-    @Column(name = "user", length = 10, nullable = false)
+    @Column(name = "user", length = 10)
     private String username;
 
-    @Column(name = "pass", length = 10, nullable = false)
+    @Column(name = "pass", length = 10)
     private String password;
 
-    private int isSell;
-    private int isAdmin;
+    @Column(columnDefinition = "bit")
+    private Boolean isSell;
+
+    @Column(columnDefinition = "bit")
+    private Boolean isAdmin;
 
     @Column(length = 50)
     private String email;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Cart> carts;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Product> products;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Invoice> invoices;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<TotalSalesTarget> totalSalesTargetList;
 }

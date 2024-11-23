@@ -1,12 +1,13 @@
 package com.HE180030.repository;
 
-import com.HE180030.model.*;
+import com.HE180030.model.Category;
 
 import java.util.List;
 
 public interface CategoryRepository {
-    List<Category> getAllCategory();
+    List<Category> getAll();
+
     Category getByName(String name);
-    void insertCategory(long categoryId, String name);
-//    Category getById(long id);
+
+    void insert(long categoryId, String name);
 }

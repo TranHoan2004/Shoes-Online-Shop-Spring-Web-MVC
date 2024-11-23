@@ -6,15 +6,13 @@ import java.util.List;
 
 public interface AccountRepository {
 
-//    void updateProfile(String username, String password);
-
     Account login(String username, String password);
 
-    void insertAccount(String user, String pass, int isSell, int isAdmin, String email);
+    void insert(String user, String pass, boolean isSell, boolean isAdmin, String email);
 
-    void deleteAccountByID(long id);
+    void deleteByID(long id);
 
-    void editAccount(String username, String password, int isSell, int isAdmin, String email, long uID);
+    void edit(String username, String password, boolean isSell, boolean isAdmin, String email, long uID);
 
     void updateProfile(String username, String password, String email, long uID);
 
@@ -24,12 +22,9 @@ public interface AccountRepository {
 
     Account getByName(String username);
 
-    List<Account> getAllAccount();
+    List<Account> getAll();
 
-    Account getAccountById(long id);
+    Account getById(long id);
 
-    List<Account> getListByPageAccount(List<Account> list, int start, int end);
-
-    List<Account> getListAccountsByPage(List<Account> list, int start, int end);
-
+    List<Account> getListByPage(List<Account> list, int start, int end);
 }

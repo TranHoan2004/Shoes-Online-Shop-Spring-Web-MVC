@@ -119,6 +119,11 @@
             <artifactId>tomcat-embed-core</artifactId>
             <version>10.1.30</version>
         </dependency> <!--tomcat-->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency> <!--javax mail-->
     </dependencies>
     <build>
         <finalName>Shoes_Onlineshop</finalName>

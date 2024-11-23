@@ -7,29 +7,23 @@ import java.util.List;
 public interface ProductRepository {
     Product getLastProduct();
 
-    List<Product> getAllProducts();
+    List<Product> getAll();
 
-    List<Product> getAllProductsbyCategoryID(long categoryId);
+    List<Product> getAllByCategoryID(long categoryId);
 
-    List<Product> searchProductsByName(String txt);
+    List<Product> searchByName(String txt);
 
     Product getByID(long id);
 
     List<Product> getListByPage(List<Product> list, int start, int end);
 
-    List<Product> getAllProductsByAccountID(long sellID);
+    List<Product> getAllByAccountID(long sellID);
 
-    void deleteProductByAccountID(long id);
+    void deleteByAccountID(long id);
 
     void deleteByID(long id);
 
-    void editProduct(String pname, String pimage, double pprice, String ptitle, String pdescription, long pcategory, String pmodel, String pcolor, String pdelivery, String pimage2, String pimage3, String pimage4, long pid) throws Exception;
+    void update(String pname, String pimage, double pprice, String ptitle, String pdescription, long pcategory, String pmodel, String pcolor, String pdelivery, String pimage2, String pimage3, String pimage4, long pid) throws Exception;
 
-    void insertProduct(String name, String image, double price, String title, String description, long category, int sid, String model, String color, String delivery, String image2, String image3, String image4);
-
-//    List<Product> getProductBySellIDAndPageIndex(long id, int pageIndex);
-
-//    List<Product> getProductByPageIndex(int pageIndex);
-
-//    int countAllProduct();
+    void insert(String name, String image, double price, String title, String description, long category, int sid, String model, String color, String delivery, String image2, String image3, String image4);
 }

@@ -22,10 +22,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-//    @Override
-//    public int countAllProduct() {
-//        return 0;
-//    }
 
     @Override
     public Product getLastProduct() {
@@ -38,7 +34,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> getAll() {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Product", Product.class)
@@ -46,7 +42,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getAllProductsbyCategoryID(long categoryID) {
+    public List<Product> getAllByCategoryID(long categoryID) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Product p " +
@@ -58,7 +54,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     // getAllproductbyTxt
-    public List<Product> searchProductsByName(String txt) {
+    public List<Product> searchByName(String txt) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Product p " +
@@ -89,7 +85,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     // getAllproductbySellID
-    public List<Product> getAllProductsByAccountID(long id) {
+    public List<Product> getAllByAccountID(long id) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Product p " +
@@ -101,7 +97,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     // deleteProductBySellID
-    public void deleteProductByAccountID(long id) {
+    public void deleteByAccountID(long id) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete from Product p where p.account.id=:id", Product.class)
                 .setParameter("id", id)
@@ -117,10 +113,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void editProduct(String name, String image, double price,
-                            String title, String description, long categoryId,
-                            String model, String color, String delivery,
-                            String image2, String image3, String image4, long id) throws Exception {
+    public void update(String name, String image, double price,
+                       String title, String description, long categoryId,
+                       String model, String color, String delivery,
+                       String image2, String image3, String image4, long id) throws Exception {
         Session session = sessionFactory.getCurrentSession();
         Product product = session.createQuery("from Product p where p.id=:id", Product.class)
                 .setParameter("id", id).uniqueResult();
@@ -147,9 +143,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void insertProduct(String name, String image, double price, String title,
-                              String description, long categoryId, int accountId,
-                              String model, String color, String delivery, String image2, String image3, String image4) {
+    public void insert(String name, String image, double price, String title,
+                       String description, long categoryId, int accountId,
+                       String model, String color, String delivery, String image2, String image3, String image4) {
         Session session = sessionFactory.getCurrentSession();
         Category category = session.createQuery("from Category c where c.id=:id", Category.class)
                 .setParameter("id", categoryId).uniqueResult();
@@ -172,14 +168,4 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .build();
         session.merge(product);
     }
-
-//    @Override
-//    public List<Product> getProductBySellIDAndPageIndex(long id, int pageIndex) {
-//        return null;
-//    }
-
-//    @Override
-//    public List<Product> getProductByPageIndex(int pageIndex) {
-//        return null;
-//    }
 }

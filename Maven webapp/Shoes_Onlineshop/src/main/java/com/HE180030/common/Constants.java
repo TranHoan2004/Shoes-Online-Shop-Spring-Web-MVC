@@ -12,4 +12,11 @@ public interface Constants {
         String HIBERNATE_FORMAT_SQL = "hibernate.format_sql";
         String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     }
+
+    interface MailProperties {
+        String HOST_NAME = "smtp.gmail.com";
+        int PORT = 465;
+        String APP_EMAIL = "hoana5k44nknd@gmail.com";
+        String APP_PASSWORD = "gmol nvte nlri ziru";
+    }
 }

@@ -1,7 +1,7 @@
 package com.HE180030.repository;
 
 public interface ReviewRepository {
-    void deleteReviewByAccountID(long id);
+    void deleteByAccountID(long id);
 
-    void deleteReviewByProductID(long productID);
+    void deleteByProductID(long productID);
 }

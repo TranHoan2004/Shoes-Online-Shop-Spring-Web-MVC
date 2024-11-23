@@ -21,7 +21,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public List<Category> getAllCategory() {
+    public List<Category> getAll() {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Category", Category.class).getResultList();
@@ -37,16 +37,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public void insertCategory(long categoryId, String name) {
+    public void insert(long categoryId, String name) {
         Category category = Category.builder()
                 .id(categoryId)
                 .name(name)
                 .build();
         sessionFactory.getCurrentSession().merge(category);
     }
-
-//    @Override
-//    public Category getById(long id) {
-//        return null;
-//    }
 }
