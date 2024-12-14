@@ -9,11 +9,11 @@ public interface AccountService {
 
     void insertAccountDTO(String user, String pass, boolean isSell, boolean isAdmin, String email);
 
-    void deleteAccountDTOByID(long id);
+    void deleteAccountDTOByID(int id);
 
-    void editAccountDTO(String username, String password, boolean isSell, boolean isAdmin, String email, long uID);
+    void editAccountDTO(String username, String password, boolean isSell, boolean isAdmin, String email, int uID);
 
-    void updateProfile(String username, String password, String email, long uID);
+    void updateProfile(String username, String password, String email, int uID);
 
     void signIn(String user, String pass);
 
@@ -23,7 +23,7 @@ public interface AccountService {
 
     List<AccountDTO> getAllAccountDTOs();
 
-    AccountDTO getAccountDTOById(long id);
+    AccountDTO getAccountDTOById(int id);
 
     List<AccountDTO> getListAccountDTOsByPage(List<AccountDTO> list, int start, int end);
 }

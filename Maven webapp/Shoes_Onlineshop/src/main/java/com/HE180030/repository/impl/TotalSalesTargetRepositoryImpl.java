@@ -18,7 +18,7 @@ public class TotalSalesTargetRepositoryImpl implements TotalSalesTargetRepositor
     }
 
     @Override
-    public void deleteByAccountID(long id) {
+    public void deleteByAccountID(int id) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete TotalSalesTarget t where t.account.id = :id")
                 .setParameter("id", id)

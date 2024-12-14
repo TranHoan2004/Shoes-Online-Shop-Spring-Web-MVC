@@ -18,7 +18,7 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "maHD")
-    private long id;
+    private int id;
 
     @Column(name = "tongGia")
     private double totalPrice;
@@ -41,7 +41,7 @@ public class Invoice {
     @Transient
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "accountID")
     private Account account;
 }

@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void insertCategoryDTO(long categoryId, String name) {
+    public void insertCategoryDTO(int categoryId, String name) {
 
     }
 }

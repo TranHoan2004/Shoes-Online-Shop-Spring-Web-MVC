@@ -1,0 +1,56 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" th:fragment="menu">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/home}">Tranhoan Shoes Supermarket</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+            <ul class="navbar-nav m-auto">
+                <li th:if="${session.get('account').isAdmin == 1}" class="nav-item">
+                    <a class="nav-link" th:href="@{/manager_account}">Account Management</a>
+                </li>
+                <li th:if="${session.get('account').isSell == 1}" class="nav-item">
+                    <a class="nav-link" th:href="@{/manager_product}">Products Management</a>
+                </li>
+                <li th:if="${session.get('account') != null}" class="nav-item">
+                    <a class="nav-link" th:href="@{/edit_profile}">Edit Profile</a>
+                </li>
+                <li th:if="${session.get('account') != null}" class="nav-item">
+                    <a class="nav-link" th:href="@{/invoice}">Invoice</a>
+                </li>
+            </ul>
+
+            <!--include search.jsp-->
+            <form th:action="@{/search}" th:method="POST" class="form-inline my-2 my-lg-0">
+                <a class="btn btn-success btn-sm ml-3" th:href="@{/manage_cart}">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span style="font-size: 14px;">Cart</span>
+                    <b>
+                        <span id="amountCart" class="badge badge-light" style="color: black; font-size: 12px;"></span>
+                    </b>
+                </a>
+            </form>
+
+            <ul class="navbar-nav">
+                <li class="nav-item" th:if="${session.get('account') != null}">
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
+                </li>
+
+                <li class="nav-item" th:if="${session.get('account') == null}">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">High quality shoes' supermarket</h1>
+        <p class="lead text-muted mb-0">Reputation creates brand with more than 10 years of providing shoe products
+            imported from China</p>
+    </div>
+</section>
+</html>

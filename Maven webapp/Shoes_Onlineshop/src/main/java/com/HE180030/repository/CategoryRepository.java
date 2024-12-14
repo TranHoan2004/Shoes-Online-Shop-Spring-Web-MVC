@@ -9,5 +9,5 @@ public interface CategoryRepository {
 
     Category getByName(String name);
 
-    void insert(long categoryId, String name);
+    void insert(int categoryId, String name);
 }

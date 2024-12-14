@@ -10,19 +10,19 @@ public interface ProductService {
 
     List<ProductDTO> getAllProductDTOs();
 
-    List<ProductDTO> getAllProductDTOsByCategoryID(long categoryId);
+    List<ProductDTO> getAllProductDTOsByCategoryID(int categoryId);
 
     List<ProductDTO> searchProductDTOsByName(String txt);
 
-    ProductDTO getProductDTOByID(long id);
+    ProductDTO getProductDTOByID(int id);
 
-    List<ProductDTO> getListProductDTOsByPage(List<Product> list, int start, int end);
+    List<ProductDTO> getListProductDTOsByPage(int start, int end);
 
-    List<ProductDTO> getAllProductDTOsByAccountID(long sellID);
+    List<ProductDTO> getAllProductDTOsByAccountID(int sellID);
 
-    void deleteProductDTOByAccountID(long id);
+    void deleteProductDTOByAccountID(int id);
 
-    void deleteProductDTOByID(long id);
+    void deleteProductDTOByID(int id);
 
     void update(ProductDTO productDTO) throws Exception;
 

@@ -13,7 +13,7 @@ public class QuantitiesSoldServiceImpl implements QuantitiesSoldService {
     }
 
     @Override
-    public void deleteQuantitiesSoldDTOByProductID(long productID) {
+    public void deleteQuantitiesSoldDTOByProductID(int productID) {
 
     }
 }

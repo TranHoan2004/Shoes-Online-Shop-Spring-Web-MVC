@@ -1,9 +1,11 @@
-package com.HE180030.config;
+package com.HE180030;
 
 import jakarta.servlet.Filter;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+@Configuration
 public class WebInitialization extends AbstractAnnotationConfigDispatcherServletInitializer {
     private static final String CHARACTER_ENCODING = "UTF-8";
 
@@ -30,4 +32,3 @@ public class WebInitialization extends AbstractAnnotationConfigDispatcherServlet
         return new Filter[]{encodingFilter};
     }
 }
-

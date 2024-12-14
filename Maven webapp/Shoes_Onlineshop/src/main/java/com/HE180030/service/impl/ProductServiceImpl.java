@@ -3,12 +3,19 @@ package com.HE180030.service.impl;
 import com.HE180030.dto.ProductDTO;
 import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
+import com.HE180030.repository.impl.ProductRepositoryImpl;
 import com.HE180030.service.ProductService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
+@Service(value = "productService")
+@Transactional(propagation = Propagation.REQUIRED)
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
@@ -17,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductDTOByAccountID(long id) {
+    public void deleteProductDTOByAccountID(int id) {
 
     }
 
@@ -28,11 +35,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProductDTOs() {
-        return null;
+        List<ProductDTO> list = new ArrayList<>();
+        for (Product product: productRepository.getAll()) {
+            list.add(convert(product));
+        }
+        return list;
     }
 
     @Override
-    public List<ProductDTO> getAllProductDTOsByCategoryID(long categoryId) {
+    public List<ProductDTO> getAllProductDTOsByCategoryID(int categoryId) {
         return null;
     }
 
@@ -42,22 +53,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductDTOByID(long id) {
+    public ProductDTO getProductDTOByID(int id) {
         return null;
     }
 
     @Override
-    public List<ProductDTO> getListProductDTOsByPage(List<Product> list, int start, int end) {
+    public List<ProductDTO> getListProductDTOsByPage(int start, int end) {
+        List<Product> products = productRepository.getAll();
+        return products.stream().map(this::convert).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getAllProductDTOsByAccountID(int sellID) {
         return null;
     }
 
     @Override
-    public List<ProductDTO> getAllProductDTOsByAccountID(long sellID) {
-        return null;
-    }
-
-    @Override
-    public void deleteProductDTOByID(long id) {
+    public void deleteProductDTOByID(int id) {
 
     }
 
@@ -69,5 +81,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void insert(ProductDTO productDTO) {
 
+    }
+
+    private ProductDTO convert(@NotNull Product product) {
+        return ProductDTO.builder()
+                .name(product.getName())
+                .image(product.getImage())
+                .image2(product.getImage2())
+                .image3(product.getImage3())
+                .image4(product.getImage4())
+                .price(product.getPrice())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .model(product.getModel())
+                .color(product.getColor())
+                .delivery(product.getDelivery())
+                .build();
     }
 }

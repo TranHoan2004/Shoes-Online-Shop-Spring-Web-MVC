@@ -18,7 +18,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public void deleteByAccountID(long id) {
+    public void deleteByAccountID(int id) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete from Review r where r.account.id = :accountID")
                 .setParameter("accountID", id)
@@ -26,7 +26,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public void deleteByProductID(long productID) {
+    public void deleteByProductID(int productID) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete from Review r where r.product.id = :productID")
                 .setParameter("productID", productID)

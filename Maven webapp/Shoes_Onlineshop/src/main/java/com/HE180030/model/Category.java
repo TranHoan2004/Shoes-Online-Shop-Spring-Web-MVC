@@ -14,7 +14,7 @@ import java.util.*;
 public class Category {
     @Id
     @Column(name = "cid")
-    private long id;
+    private int id;
 
     @Column(name = "cname", length = 50)
     private String name;

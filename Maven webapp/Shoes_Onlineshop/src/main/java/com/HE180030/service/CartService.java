@@ -6,21 +6,21 @@ import com.HE180030.model.Cart;
 import java.util.List;
 
 public interface CartService {
-    void updateAmountCartDTO(long accountID, long productID, int amount);
+    void updateAmountCartDTO(int accountID, int productID, int amount);
 
-    void deleteCartDTOByProductID(long productID);
+    void deleteCartDTOByProductID(int productID);
 
-    void deleteCartDTOByAccountID(long id);
+    void deleteCartDTOByAccountID(int id);
 
-    List<CartDTO> getCartDTOByAccountID(long accountID);
+    List<CartDTO> getCartDTOByAccountID(int accountID);
 
-    CartDTO getCartDTOByAccountIDAndProductID(long accountID, long productID, String size);
+    CartDTO getCartDTOByAccountIDAndProductID(int accountID, int productID, String size);
 
-    void create(long accountID, long productID, int amount, String size);
+    void create(int accountID, int productID, int amount, String size);
 
-    void createAmountAndSize(long accountID, long productID, int amount, String size);
+    void createAmountAndSize(int accountID, int productID, int amount, String size);
 
-    void editAmountAndSize(long accountID, long productID, int amount, String size);
+    void editAmountAndSize(int accountID, int productID, int amount, String size);
 
-    void editAmount(long accountID, long productID, int amount);
+    void editAmount(int accountID, int productID, int amount);
 }

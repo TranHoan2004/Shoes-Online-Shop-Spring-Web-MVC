@@ -18,7 +18,7 @@ public class QuantitiesSoldRepositoryImpl implements QuantitiesSoldRepository {
     }
 
     @Override
-    public void deleteByProductID(long productID) {
+    public void deleteByProductID(int productID) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete from QuantitesSold q where q.product.id = :productID")
                 .setParameter("productID", productID)

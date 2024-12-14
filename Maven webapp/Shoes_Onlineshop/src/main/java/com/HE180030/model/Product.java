@@ -1,6 +1,7 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(length = 200)
     private String name;
@@ -28,6 +29,8 @@ public class Product {
 
     @Column(length = 500)
     private String title;
+
+    @Column(columnDefinition = "nvarchar(max)")
     private String description;
 
     @Column(length = 50)
@@ -48,7 +51,7 @@ public class Product {
     @Column(length = 500)
     private String image4;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "cateID")
     private Category category;
 

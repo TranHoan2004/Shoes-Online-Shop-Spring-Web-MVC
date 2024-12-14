@@ -23,14 +23,14 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public void deleteByAccountID(long id) {
+    public void deleteByAccountID(int id) {
         sessionFactory.getCurrentSession().createQuery("delete from Invoice i where i.account.id=:id", Invoice.class)
                 .setParameter("id", id)
                 .executeUpdate();
     }
 
     @Override
-    public void insert(long accountID, double totalPrice,
+    public void insert(int accountID, double totalPrice,
                        String context, int phone,
                        String delivery, String name,
                        String typePay) {
@@ -49,7 +49,7 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public List<Invoice> getAllInvoiceByID(long id) {
+    public List<Invoice> getAllInvoiceByID(int id) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Invoice i where i.account.id=:id", Invoice.class)

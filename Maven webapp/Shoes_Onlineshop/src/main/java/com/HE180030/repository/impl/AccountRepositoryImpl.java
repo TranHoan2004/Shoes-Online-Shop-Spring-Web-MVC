@@ -26,7 +26,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Account getById(long id) {
+    public Account getById(int id) {
         return sessionFactory.getCurrentSession().get(Account.class, id);
     }
 
@@ -69,13 +69,13 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void deleteByID(long id) {
+    public void deleteByID(int id) {
         Account account = getById(id);
         sessionFactory.getCurrentSession().remove(account);
     }
 
     @Override
-    public void edit(String username, String password, boolean isSell, boolean isAdmin, String email, long id) {
+    public void edit(String username, String password, boolean isSell, boolean isAdmin, String email, int id) {
         Account account = getById(id);
         account.setUsername(username);
         account.setPassword(password);
@@ -86,7 +86,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateProfile(String username, String password, String email, long id) {
+    public void updateProfile(String username, String password, String email, int id) {
         Account account = getById(id);
         account.setUsername(username);
         account.setPassword(password);

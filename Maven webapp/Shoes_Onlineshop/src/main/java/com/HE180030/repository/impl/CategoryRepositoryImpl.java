@@ -37,7 +37,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public void insert(long categoryId, String name) {
+    public void insert(int categoryId, String name) {
         Category category = Category.builder()
                 .id(categoryId)
                 .name(name)

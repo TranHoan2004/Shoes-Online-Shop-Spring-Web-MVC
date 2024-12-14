@@ -16,17 +16,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void deleteInvoiceDTOByAccountID(long id) {
+    public void deleteInvoiceDTOByAccountID(int id) {
 
     }
 
     @Override
-    public void insertInvoiceDTO(long accountID, double totalPrice, String context, int phone, String delivery, String name, String typePay) {
+    public void insertInvoiceDTO(int accountID, double totalPrice, String context, int phone, String delivery, String name, String typePay) {
 
     }
 
     @Override
-    public List<InvoiceDTO> getAllInvoiceByID(long id) {
+    public List<InvoiceDTO> getAllInvoiceByID(int id) {
         return null;
     }
 }

@@ -6,6 +6,7 @@ import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,11 +18,12 @@ import java.util.List;
 @DependsOn("sessionFactory")
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
-    private final SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-    public ProductRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    public ProductRepositoryImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     @Override
     public Product getLastProduct() {
@@ -42,7 +44,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getAllByCategoryID(long categoryID) {
+    public List<Product> getAllByCategoryID(int categoryID) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Product p " +
@@ -65,7 +67,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product getByID(long id) {
+    public Product getByID(int id) {
         return sessionFactory.getCurrentSession().get(Product.class, id);
     }
 
@@ -85,7 +87,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     // getAllproductbySellID
-    public List<Product> getAllByAccountID(long id) {
+    public List<Product> getAllByAccountID(int id) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Product p " +
@@ -97,7 +99,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     // deleteProductBySellID
-    public void deleteByAccountID(long id) {
+    public void deleteByAccountID(int id) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete from Product p where p.account.id=:id", Product.class)
                 .setParameter("id", id)
@@ -105,7 +107,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void deleteByID(long id) {
+    public void deleteByID(int id) {
         sessionFactory.getCurrentSession()
                 .createQuery("delete from Product p where p.id=:id", Product.class)
                 .setParameter("id", id)
@@ -114,9 +116,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void update(String name, String image, double price,
-                       String title, String description, long categoryId,
+                       String title, String description, int categoryId,
                        String model, String color, String delivery,
-                       String image2, String image3, String image4, long id) throws Exception {
+                       String image2, String image3, String image4, int id) throws Exception {
         Session session = sessionFactory.getCurrentSession();
         Product product = session.createQuery("from Product p where p.id=:id", Product.class)
                 .setParameter("id", id).uniqueResult();
@@ -144,7 +146,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void insert(String name, String image, double price, String title,
-                       String description, long categoryId, int accountId,
+                       String description, int categoryId, int accountId,
                        String model, String color, String delivery, String image2, String image3, String image4) {
         Session session = sessionFactory.getCurrentSession();
         Category category = session.createQuery("from Category c where c.id=:id", Category.class)

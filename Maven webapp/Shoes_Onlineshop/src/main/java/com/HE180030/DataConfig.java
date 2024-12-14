@@ -1,4 +1,4 @@
-package com.HE180030.config;
+package com.HE180030;
 
 import com.HE180030.common.Constants;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
-import java.util.logging.*;
 
 @Configuration
 @PropertySource("classpath:database.properties")
@@ -28,7 +27,7 @@ public class DataConfig implements Constants.DatabaseConfig {
 
     @Bean(value = "dataSource", name = {"dataSource"})
     DataSource dataSource() {
-        Logger.getLogger(getClass().getName()).log(Level.ALL, "data source");
+        System.out.println("data source");
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getProperty(JDBC_DRIVER_CLASSNAME, JDBC_DRIVER_CLASSNAME_DEFAULT));
         dataSource.setUrl(environment.getProperty(JDBC_URL));
@@ -50,11 +49,11 @@ public class DataConfig implements Constants.DatabaseConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan(new String[]{
-                "com.hsf301.se1876",
-                "com.hsf301.se1876.entity",
-                "com.hsf301.se1876.dao",
-                "com.hsf301.se1876.dao.impl",
-                "com.hsf301.se1876.service.impl"});
+                "com.HE180030",
+                "com.HE180030.model",
+                "com.HE180030.repository",
+                "com.HE180030.repository.impl",
+                "com.HE180030.service.impl"});
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

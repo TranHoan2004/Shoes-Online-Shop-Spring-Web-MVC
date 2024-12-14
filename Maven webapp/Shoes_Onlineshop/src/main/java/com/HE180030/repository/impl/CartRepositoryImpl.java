@@ -24,7 +24,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void createAmountAndSize(long accountID, long productID, int amount, String size) {
+    public void createAmountAndSize(int accountID, int productID, int amount, String size) {
         Session session = sessionFactory.getCurrentSession();
         Cart cart = session.createQuery(
                 "from Cart c " +
@@ -38,7 +38,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public List<Cart> getByAccountID(long accountID) {
+    public List<Cart> getByAccountID(int accountID) {
         return sessionFactory
                 .getCurrentSession()
                 .createQuery("from Cart c where c.account.id=:accountID", Cart.class)
@@ -47,7 +47,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void updateAmountCart(long accountID, long productID, int amount) {
+    public void updateAmountCart(int accountID, int productID, int amount) {
         Cart cart = sessionFactory
                 .getCurrentSession()
                 .createQuery("from Cart c where c.account.id=:accountID and c.product.id=:productID", Cart.class)
@@ -59,19 +59,19 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void deleteByProductID(long productID) {
+    public void deleteByProductID(int productID) {
         sessionFactory.getCurrentSession().createQuery("delete from Cart c where c.product.id=:productID", Cart.class)
                 .setParameter("productID", productID).executeUpdate();
     }
 
     @Override
-    public void deleteByAccountID(long id) {
+    public void deleteByAccountID(int id) {
         sessionFactory.getCurrentSession().createQuery("delete from Cart c where c.account.id=:id", Cart.class)
                 .setParameter("id", id).executeUpdate();
     }
 
     @Override
-    public void create(long accountID, long productID, int amount, String size) {
+    public void create(int accountID, int productID, int amount, String size) {
         Session session = sessionFactory.getCurrentSession();
         Account account = session.createQuery("from Account a where a.id=:accountID", Account.class).setParameter("accountID", accountID).uniqueResult();
         Product product = session.createQuery("from Product a where a.id=:productID", Product.class).setParameter("productID", productID).uniqueResult();
@@ -85,7 +85,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public Cart getByAccountIDAndProductID(long accountID, long productID, String size) {
+    public Cart getByAccountIDAndProductID(int accountID, int productID, String size) {
         return sessionFactory.getCurrentSession().createQuery("select c from Cart c where c.account.id=:accountID and c.product.id=:productID and c.size=:size", Cart.class)
                 .setParameter("accountID", accountID)
                 .setParameter("productID", productID)
@@ -94,7 +94,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void editAmountAndSize(long accountID, long productID, int amount, String size) {
+    public void editAmountAndSize(int accountID, int productID, int amount, String size) {
         Session session = sessionFactory.getCurrentSession();
         Cart cart = session.createQuery("from Cart c where c.account.id=:accountID and c.product.id=:productID", Cart.class).uniqueResult();
         cart.setAmount(amount);
@@ -103,7 +103,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void editAmount(long accountID, long productID, int amount) {
+    public void editAmount(int accountID, int productID, int amount) {
         Session session = sessionFactory.getCurrentSession();
         Cart cart = session.createQuery("from Cart c where c.account.id=:accountID and c.product.id=:productID", Cart.class).uniqueResult();
         cart.setAmount(amount);

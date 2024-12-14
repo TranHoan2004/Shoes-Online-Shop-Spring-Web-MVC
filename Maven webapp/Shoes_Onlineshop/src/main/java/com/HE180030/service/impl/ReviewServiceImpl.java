@@ -13,12 +13,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReviewDTOByAccountID(long id) {
+    public void deleteReviewDTOByAccountID(int id) {
 
     }
 
     @Override
-    public void deleteReviewDTOByProductID(long productID) {
+    public void deleteReviewDTOByProductID(int productID) {
 
     }
 }

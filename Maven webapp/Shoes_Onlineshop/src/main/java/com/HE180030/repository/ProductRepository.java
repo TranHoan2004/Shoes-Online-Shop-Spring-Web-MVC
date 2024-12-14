@@ -9,21 +9,21 @@ public interface ProductRepository {
 
     List<Product> getAll();
 
-    List<Product> getAllByCategoryID(long categoryId);
+    List<Product> getAllByCategoryID(int categoryId);
 
     List<Product> searchByName(String txt);
 
-    Product getByID(long id);
+    Product getByID(int id);
 
     List<Product> getListByPage(List<Product> list, int start, int end);
 
-    List<Product> getAllByAccountID(long sellID);
+    List<Product> getAllByAccountID(int sellID);
 
-    void deleteByAccountID(long id);
+    void deleteByAccountID(int id);
 
-    void deleteByID(long id);
+    void deleteByID(int id);
 
-    void update(String pname, String pimage, double pprice, String ptitle, String pdescription, long pcategory, String pmodel, String pcolor, String pdelivery, String pimage2, String pimage3, String pimage4, long pid) throws Exception;
+    void update(String pname, String pimage, double pprice, String ptitle, String pdescription, int pcategory, String pmodel, String pcolor, String pdelivery, String pimage2, String pimage3, String pimage4, int pid) throws Exception;
 
-    void insert(String name, String image, double price, String title, String description, long category, int sid, String model, String color, String delivery, String image2, String image3, String image4);
+    void insert(String name, String image, double price, String title, String description, int category, int sid, String model, String color, String delivery, String image2, String image3, String image4);
 }

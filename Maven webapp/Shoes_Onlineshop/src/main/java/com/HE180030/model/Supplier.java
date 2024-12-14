@@ -16,7 +16,7 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idSupplier")
-    private long id;
+    private int id;
 
     @Column(name = "nameSupplier", length = 100)
     private String name;
@@ -30,7 +30,7 @@ public class Supplier {
     @Column(name = "addressSupplier", length = 200)
     private String address;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cateID")
     private Category category;
 }

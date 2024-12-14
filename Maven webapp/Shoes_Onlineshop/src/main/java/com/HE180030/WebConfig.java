@@ -1,7 +1,8 @@
-package com.HE180030.config;
+package com.HE180030;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -25,19 +26,26 @@ import java.util.logging.Logger;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
+@SpringBootConfiguration
 @ComponentScan
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
     private ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
     @Bean
     SpringResourceTemplateResolver templateResolver() {
         Logger.getLogger(getClass().getName()).log(Level.ALL, "template resolver");
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(applicationContext);
-        resolver.setPrefix("WEB-INF/views/");
+        resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCacheable(true);
+        resolver.setTemplateMode("HTML5");
         resolver.setCharacterEncoding("UTF-8");
         return resolver;
     }
@@ -52,11 +60,11 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     @Bean
     ViewResolver viewResolver() {
-        ThymeleafViewResolver view = new ThymeleafViewResolver();
-        view.setTemplateEngine(templateEngine());
-        view.setCharacterEncoding("UTF-8");
-        view.setContentType("text/html;charset=UTF-8");
-        return view;
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
+        viewResolver.setContentType("text/html;charset=UTF-8");
+        return viewResolver;
     }
 
     @Override
@@ -65,11 +73,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
-    }
-
-    @Override
-    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 
     @Bean

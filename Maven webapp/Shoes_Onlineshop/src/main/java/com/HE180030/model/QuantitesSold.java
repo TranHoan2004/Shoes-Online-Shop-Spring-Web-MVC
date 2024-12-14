@@ -14,9 +14,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "SoLuongDaBan")
 public class QuantitesSold {
     @Id
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productID")
     private Product product;
+
     @Column(name = "soLuongDaBan")
     private int quantity;
 }

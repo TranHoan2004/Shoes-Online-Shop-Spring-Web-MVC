@@ -13,7 +13,7 @@ public class TotalSalesTargetServiceImpl implements TotalSalesTargetService {
     }
 
     @Override
-    public void deleteTotalSalesSpendDTOByAccountID(long id) {
+    public void deleteTotalSalesSpendDTOByAccountID(int id) {
 
     }
 }

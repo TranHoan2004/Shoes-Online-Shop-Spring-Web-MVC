@@ -16,47 +16,47 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void create(long accountID, long productID, int amount, String size) {
+    public void create(int accountID, int productID, int amount, String size) {
 
     }
 
     @Override
-    public void updateAmountCartDTO(long accountID, long productID, int amount) {
+    public void updateAmountCartDTO(int accountID, int productID, int amount) {
 
     }
 
     @Override
-    public void deleteCartDTOByProductID(long productID) {
+    public void deleteCartDTOByProductID(int productID) {
 
     }
 
     @Override
-    public void deleteCartDTOByAccountID(long id) {
+    public void deleteCartDTOByAccountID(int id) {
 
     }
 
     @Override
-    public List<CartDTO> getCartDTOByAccountID(long accountID) {
+    public List<CartDTO> getCartDTOByAccountID(int accountID) {
         return null;
     }
 
     @Override
-    public CartDTO getCartDTOByAccountIDAndProductID(long accountID, long productID, String size) {
+    public CartDTO getCartDTOByAccountIDAndProductID(int accountID, int productID, String size) {
         return null;
     }
 
     @Override
-    public void createAmountAndSize(long accountID, long productID, int amount, String size) {
+    public void createAmountAndSize(int accountID, int productID, int amount, String size) {
 
     }
 
     @Override
-    public void editAmountAndSize(long accountID, long productID, int amount, String size) {
+    public void editAmountAndSize(int accountID, int productID, int amount, String size) {
 
     }
 
     @Override
-    public void editAmount(long accountID, long productID, int amount) {
+    public void editAmount(int accountID, int productID, int amount) {
 
     }
 }

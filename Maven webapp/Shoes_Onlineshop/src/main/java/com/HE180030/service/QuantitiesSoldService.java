@@ -1,5 +1,5 @@
 package com.HE180030.service;
 
 public interface QuantitiesSoldService {
-    void deleteQuantitiesSoldDTOByProductID(long productID);
+    void deleteQuantitiesSoldDTOByProductID(int productID);
 }

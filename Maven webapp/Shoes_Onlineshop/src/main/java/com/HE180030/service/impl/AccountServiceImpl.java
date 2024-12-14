@@ -16,7 +16,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAccountDTOByID(long id) {
+    public void deleteAccountDTOByID(int id) {
 
     }
 
@@ -31,12 +31,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void editAccountDTO(String username, String password, boolean isSell, boolean isAdmin, String email, long uID) {
+    public void editAccountDTO(String username, String password, boolean isSell, boolean isAdmin, String email, int uID) {
 
     }
 
     @Override
-    public void updateProfile(String username, String password, String email, long uID) {
+    public void updateProfile(String username, String password, String email, int uID) {
 
     }
 
@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO getAccountDTOById(long id) {
+    public AccountDTO getAccountDTOById(int id) {
         return null;
     }
 
