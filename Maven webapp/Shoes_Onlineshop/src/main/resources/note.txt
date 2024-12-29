@@ -1,0 +1,2 @@
+detail.html: 138 "Add to cart"
+footer: 9-12 "#nike,..." is a filter

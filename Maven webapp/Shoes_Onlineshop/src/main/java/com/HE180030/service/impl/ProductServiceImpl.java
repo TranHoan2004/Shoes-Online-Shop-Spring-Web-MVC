@@ -3,7 +3,6 @@ package com.HE180030.service.impl;
 import com.HE180030.dto.ProductDTO;
 import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
-import com.HE180030.repository.impl.ProductRepositoryImpl;
 import com.HE180030.service.ProductService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -29,14 +28,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getLastProduct() {
-        return null;
+    public ProductDTO getLastProduct() throws Exception {
+        Product product = productRepository.getLastProduct();
+        if (product != null) {
+            return ProductDTO.builder()
+                    .delivery(product.getDelivery())
+                    .name(product.getName())
+                    .model(product.getModel())
+                    .price(product.getPrice())
+                    .color(product.getColor())
+                    .title(product.getTitle())
+                    .description(product.getDescription())
+                    .image(product.getImage())
+                    .image2(product.getImage2())
+                    .image3(product.getImage3())
+                    .image4(product.getImage4())
+                    .build();
+        }
+        throw new Exception("No result");
     }
 
     @Override
     public List<ProductDTO> getAllProductDTOs() {
         List<ProductDTO> list = new ArrayList<>();
-        for (Product product: productRepository.getAll()) {
+        for (Product product : productRepository.getAll()) {
             list.add(convert(product));
         }
         return list;
@@ -44,7 +59,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProductDTOsByCategoryID(int categoryId) {
-        return null;
+        List<Product> list = productRepository.getAllByCategoryID(categoryId);
+        List<ProductDTO> result = new ArrayList<>();
+        for (Product product : list) {
+            result.add(convert(product));
+        }
+        return result;
     }
 
     @Override
@@ -60,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getListProductDTOsByPage(int start, int end) {
         List<Product> products = productRepository.getAll();
+        products = productRepository.getListByPage(products, start, end);
         return products.stream().map(this::convert).collect(Collectors.toList());
     }
 

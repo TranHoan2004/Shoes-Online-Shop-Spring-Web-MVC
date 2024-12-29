@@ -6,7 +6,7 @@ import com.HE180030.model.Product;
 import java.util.List;
 
 public interface ProductService {
-    ProductDTO getLastProduct();
+    ProductDTO getLastProduct() throws Exception;
 
     List<ProductDTO> getAllProductDTOs();
 

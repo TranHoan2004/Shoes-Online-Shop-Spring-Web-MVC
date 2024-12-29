@@ -1,9 +1,12 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +27,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Supplier> suppliers;
+
+    public Category(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

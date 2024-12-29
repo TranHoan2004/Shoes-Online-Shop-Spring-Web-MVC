@@ -19,7 +19,11 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,15 +49,31 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCacheable(true);
-        resolver.setTemplateMode("HTML5");
         resolver.setCharacterEncoding("UTF-8");
+        resolver.setOrder(1);
+        return resolver;
+    }
+
+    @Bean
+    SpringResourceTemplateResolver templateResolverJSP() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setApplicationContext(applicationContext);
+        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setSuffix(".jsp");
+        resolver.setTemplateMode("JSP");
+        resolver.setCacheable(true);
+        resolver.setCharacterEncoding("UTF-8");
+        resolver.setOrder(2);
         return resolver;
     }
 
     @Bean
     SpringTemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.setTemplateResolver(templateResolver());
+        Set<ITemplateResolver> list = new HashSet<>();
+        list.add(templateResolver());
+        list.add(templateResolverJSP());
+        engine.setTemplateResolvers(list);
         engine.setEnableSpringELCompiler(true);
         return engine;
     }

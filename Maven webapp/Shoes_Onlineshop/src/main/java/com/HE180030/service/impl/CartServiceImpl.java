@@ -1,10 +1,12 @@
 package com.HE180030.service.impl;
 
 import com.HE180030.dto.CartDTO;
+import com.HE180030.model.Cart;
 import com.HE180030.repository.CartRepository;
 import com.HE180030.service.CartService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,7 +39,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartDTO> getCartDTOByAccountID(int accountID) {
-        return null;
+        List<Cart> list = cartRepository.getByAccountID(accountID);
+        List<CartDTO> carts = new ArrayList<>();
+        for (Cart cart : list) {
+            carts.add(convertToCartDTO(cart));
+        }
+        return carts;
     }
 
     @Override
@@ -58,5 +65,13 @@ public class CartServiceImpl implements CartService {
     @Override
     public void editAmount(int accountID, int productID, int amount) {
 
+    }
+
+    private CartDTO convertToCartDTO(Cart cart) {
+        return CartDTO.builder()
+                .amount(cart.getAmount())
+                .size(cart.getSize())
+                .id(cart.getId())
+                .build();
     }
 }

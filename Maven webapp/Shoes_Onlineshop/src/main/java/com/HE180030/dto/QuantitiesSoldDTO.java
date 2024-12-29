@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuantitiesSoldDTO {
-    private long productID;
     private int quantity;
 }

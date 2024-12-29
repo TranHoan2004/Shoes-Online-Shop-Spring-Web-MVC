@@ -2,16 +2,97 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Shoes Onlineshop</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!------ Include the above in your HEAD tag ---------->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link href="resources/static/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .card-img-top {
+            object-fit: cover;
+            width: 100%;
+            height: 200px;
+        }
+    </style>
 </head>
 <body>
-<h3>hehe</h3>
-<nav th:replace="~{menu :: menu}"></nav>
+<div th:replace="~{menu :: menu(${searchForm})}"></div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb"></nav>
+        </div>
+    </div>
+</div>
+<!---->
+<div class="container">
+    <div class="row">
+        <!--Category-->
+        <div th:replace="~{left :: left(${listCategory}, ${last})}"></div>
+        <div class="col-sm-9">
+            <div class="row">
+                <!--products list container-->
+                <th:block th:each="items: ${list}">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <img class="card-img-top" th:src="${items.getImage()}" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title show_txt">
+                                    <a th:href="@{/detail(pid=${items.getId()})}" title="View Product"
+                                       th:text="${items.getName()}"></a>
+                                </h4>
+                                <p class="card-text show_txt" th:text="${items.getTitle()}"></p>
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="btn btn-danger btn-block" th:text="${items.getPrice()} + ' $'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            <div class="clearfix">
+                <div class="hint-text">
+                    Showing <b th:text="${page}"></b> of <b th:text="${num}"></b> pages
+                </div>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a th:href="@{/home(page=${page - 1 == 0 ? 1 : page - 1})}" class="page-link">Previous</a>
+                    </li>
+                    <th:block th:each="items: ${#numbers.sequence(1, num)}">
+                        <li class="page-item">
+                            <a th:href="@{/home(page=${items})}" class="page-link" th:text="${items}"></a>
+                        </li>
+                    </th:block>
+                    <li class="page-item">
+                        <a th:href="@{/home(page=${page + 1 > num ? num : page + 1})}" class="page-link"
+                           th:text="Next"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener("load", function loadAmountCart() {
+        $.ajax({
+            url: "/Shoes_Onlineshop/loadAllAmountCart",
+            type: "get", //send it through get method
+            data: {},
+            success: function (responseData) {
+                document.getElementById("amountCart").innerHTML = responseData;
+            }
+        });
+    }, false);
+
+    function concatLink(string, id) {
+        window.location.href = string + id;
+    }
+</script>
+<div th:replace="~{footer :: footer}"></div>
 </body>
 </html>

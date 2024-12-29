@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDTO {
-    private long id;
+    private int id;
     private String username;
     private String password;
     private int isSell;

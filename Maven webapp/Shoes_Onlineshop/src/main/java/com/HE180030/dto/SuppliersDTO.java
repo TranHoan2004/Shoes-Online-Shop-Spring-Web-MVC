@@ -1,6 +1,5 @@
 package com.HE180030.dto;
 
-import com.HE180030.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SuppliersDTO {
-    private long id;
+    private int id;
     private String name;
     private String phone;
     private String email;
     private String address;
-    private Category category;
 }

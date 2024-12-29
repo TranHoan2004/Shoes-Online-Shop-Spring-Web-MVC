@@ -1,6 +1,5 @@
 package com.HE180030.dto;
 
-import com.HE180030.model.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvoiceDTO {
-    private long id;
+    private int id;
     private double totalPrice;
     private Date exportDate;
     private String context;
@@ -21,5 +20,4 @@ public class InvoiceDTO {
     private int phone;
     private String delivery;
     private String name;
-    private Account account;
 }

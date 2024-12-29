@@ -4,26 +4,23 @@ import com.HE180030.dto.ProductDTO;
 import com.HE180030.repository.ProductRepository;
 import com.HE180030.repository.impl.ProductRepositoryImpl;
 import com.HE180030.service.ProductService;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.DependsOn;
 
 import java.util.List;
 
+import static org.mockito.Mockito.mock;
+
 class ProductServiceImplTest {
-//    private ProductService service;
-//
-//    public ProductServiceImplTest() {
-//        ProductRepository repo = new ProductRepositoryImpl();
-//        service = new ProductServiceImpl(repo);
-//    }
+    private ProductService service;
+    private ProductRepository repository;
 
     @BeforeEach
     void setUp() {
+        repository = mock(ProductRepositoryImpl.class);
+        service = new ProductServiceImpl(repository);
     }
 
     @AfterEach
@@ -56,9 +53,9 @@ class ProductServiceImplTest {
 
     @Test
     void getListProductDTOsByPage() {
-//        List<ProductDTO> list = service.getListProductDTOsByPage(1, 5);
-//        System.out.println(list.size());
-//        Assertions.assertEquals(5, list.size());
+        List<ProductDTO> list = service.getListProductDTOsByPage(0, 5);
+        System.out.println(list.size());
+        Assertions.assertEquals(5, list.size());
     }
 
     @Test
