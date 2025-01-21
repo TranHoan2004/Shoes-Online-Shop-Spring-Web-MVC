@@ -1,10 +1,13 @@
 package com.HE180030.service.impl;
 
 import com.HE180030.dto.AccountDTO;
+import com.HE180030.model.Account;
 import com.HE180030.repository.AccountRepository;
 import com.HE180030.service.AccountService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,27 +24,28 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO login(String username, String password) {
+    public AccountDTO login(AccountDTO accountDTO) {
         return null;
     }
 
     @Override
-    public void insertAccountDTO(String user, String pass, boolean isSell, boolean isAdmin, String email) {
+    public void insertAccountDTO(AccountDTO accountDTO) {
 
     }
 
     @Override
-    public void editAccountDTO(String username, String password, boolean isSell, boolean isAdmin, String email, int uID) {
+    public void editAccountDTO(AccountDTO accountDTO) {
 
     }
 
     @Override
-    public void updateProfile(String username, String password, String email, int uID) {
-
+    public void updateProfile(AccountDTO accountDTO) {
+        Account account = convert(accountDTO);
+        accountRepository.updateProfile(account.getUsername(), account.getPassword(), account.getEmail(), account.getId());
     }
 
     @Override
-    public void signIn(String user, String pass) {
+    public void signin(AccountDTO accountDTO) {
 
     }
 
@@ -51,13 +55,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO getByName(String username) {
+    public AccountDTO getAccountDTOByName(String username) {
         return null;
     }
 
     @Override
     public List<AccountDTO> getAllAccountDTOs() {
-        return null;
+        List<Account> list = accountRepository.getAll();
+        List<AccountDTO> accounts = new ArrayList<>();
+        for (Account account : list) {
+            accounts.add(convert(account));
+        }
+        return accounts;
     }
 
     @Override
@@ -68,5 +77,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<AccountDTO> getListAccountDTOsByPage(List<AccountDTO> list, int start, int end) {
         return null;
+    }
+
+    private AccountDTO convert(@NotNull Account account) {
+        return AccountDTO.builder()
+                .id(account.getId())
+                .email(account.getEmail())
+                .isAdmin(account.getIsAdmin())
+                .isSell(account.getIsSell())
+                .password(account.getPassword())
+                .username(account.getUsername())
+                .build();
+    }
+
+    private Account convert(@NotNull AccountDTO account) {
+        return Account.builder()
+                .id(account.getId())
+                .email(account.getEmail())
+                .isAdmin(account.getIsAdmin())
+                .isSell(account.getIsSell())
+                .password(account.getPassword())
+                .username(account.getUsername())
+                .build();
     }
 }

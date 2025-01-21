@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional(propagation = Propagation.REQUIRED)
@@ -73,16 +74,11 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> getListByPage(List<Product> list, int start, int end) {
-//        List<Product> arr = new ArrayList<>();
-//        for (int i = start; i < end; i++) {
-//            arr.add(list.get(i));
-//        }
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Product p ", Product.class)
-                .setFirstResult(start)
-                .setMaxResults(end)
-                .getResultList();
+        List<Product> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
     }
 
     @Override

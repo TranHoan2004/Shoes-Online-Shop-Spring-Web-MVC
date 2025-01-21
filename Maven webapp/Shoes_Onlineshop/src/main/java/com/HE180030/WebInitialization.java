@@ -1,6 +1,7 @@
 package com.HE180030;
 
 import jakarta.servlet.Filter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -19,6 +20,7 @@ public class WebInitialization extends AbstractAnnotationConfigDispatcherServlet
         return new Class<?>[0];
     }
 
+    @NotNull
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};

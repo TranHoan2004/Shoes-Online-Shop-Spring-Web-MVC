@@ -10,4 +10,6 @@ public interface CategoryRepository {
     Category getByName(String name);
 
     void insert(int categoryId, String name);
+
+    String getById(int categoryId);
 }

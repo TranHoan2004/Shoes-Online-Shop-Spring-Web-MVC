@@ -15,7 +15,6 @@
             cursor: zoom-in;
         }
 
-
         .gallery-wrap .img-small-wrap .item-gallery {
             width: 220px;
             height: 124px;
@@ -44,6 +43,8 @@
     </style>
 </head>
 <body>
+<!--Menu-->
+<div th:replace="~{menu::menu(searchForm)}"></div>
 <div class="container">
     <div class="row">
         <!--Left-->
@@ -52,7 +53,7 @@
             <div class="container">
                 <div class="card">
                     <div class="row">
-                        <aside class="col-sm-9 border-right">
+                        <aside class="col-sm-5 border-right">
                             <article class="gallery-wrap">
                                 <div class="img-big-wrap">
                                     <a href="#">
@@ -81,7 +82,7 @@
                                         <p th:text="${detail.getDescription()}"></p>
                                     </dd>
                                 </dl>
-                                <form th:action="@{/addToCart?pid=${detail.getId()}}" th:method="POST">
+                                <form th:action="@{/addToCart(id=${detail.getId()})}" th:method="POST">
                                     <div class="table-responsive mb-2">
                                         <table class="table table-sm table-borderless">
                                             <tbody>
@@ -150,11 +151,9 @@
 <script>
     window.addEventListener("load", function loadAmountCart() {
         $.ajax({
-            url: "/Shoes_Onlineshop/loadAllAmountCart",
+            url: "/Shoes_Onlineshop_war_exploded/loadAllAmountCart",
             type: "get", //send it through get method
-            data: {
-
-            },
+            data: {},
             success: function (responseData) {
                 document.getElementById("amountCart").innerHTML = responseData;
             }

@@ -1,7 +1,5 @@
 package com.HE180030.controller;
 
-import com.HE180030.dto.AccountDTO;
-import com.HE180030.dto.CategoryDTO;
 import com.HE180030.dto.ProductDTO;
 import com.HE180030.dto.SearchForm;
 import com.HE180030.service.AccountService;
@@ -13,10 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,12 +40,13 @@ public class HomeController {
             displayProductByPage(model, list, pageRequest);
 
             // for left container
-            getCategory(model);
-            getLastProduct(model);
+            getCategoryAndLastProduct(model);
 
             // for head container
             model.addAttribute("searchForm", new SearchForm());
-            session.setAttribute("account", null);
+            if (session.getAttribute("account") == null) {
+                session.setAttribute("account", null);
+            }
         } catch (Exception e) {
             Logger.getLogger(HomeController.class.getName()).log(Level.ALL, e.getMessage(), e);
         }
@@ -64,8 +63,7 @@ public class HomeController {
             model.addAttribute("searchForm", new SearchForm());
 
             // for left container
-            getCategory(model);
-            getLastProduct(model);
+            getCategoryAndLastProduct(model);
         } catch (Exception e) {
             Logger.getLogger(HomeController.class.getName()).log(Level.ALL, e.getMessage(), e);
         }
@@ -76,17 +74,29 @@ public class HomeController {
     public String filterByCategory(Model model, @RequestParam("id") int categoryID, @ModelAttribute("page") String pageRequest) {
         try {
             // for products list container
-            displayProductByPage(model, productService.getAllProductDTOsByCategoryID(categoryID), pageRequest);
-
+            List<ProductDTO> list = productService.getAllProductDTOsByCategoryID(categoryID);
+            displayProductByPage(model, list, pageRequest);
             // for head container
             model.addAttribute("searchForm", new SearchForm());
 
             // for left container
-            getCategory(model);
-            getLastProduct(model);
+            getCategoryAndLastProduct(model);
 
             // category id
             model.addAttribute("cateID", categoryID);
+        } catch (Exception e) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.ALL, e.getMessage(), e);
+        }
+        return "home";
+    }
+
+    @PostMapping("/search")
+    public String search(Model model, @ModelAttribute("searchForm") SearchForm searchForm) {
+        try {
+            List<ProductDTO> products = productService.searchProductDTOsByName(searchForm.getText());
+            getCategoryAndLastProduct(model);
+            model.addAttribute("list", products);
+            model.addAttribute("searchForm", searchForm);
         } catch (Exception e) {
             Logger.getLogger(HomeController.class.getName()).log(Level.ALL, e.getMessage(), e);
         }
@@ -105,17 +115,15 @@ public class HomeController {
         }
         int start = (page - 1) * numberpage;
         int end = Math.min(page * numberpage, size);
-        List<ProductDTO> listByPage = productService.getListProductDTOsByPage(start, end);
+        List<ProductDTO> listByPage = productService.getListProductDTOsByPage(list, start, end);
         model.addAttribute("list", listByPage);
         model.addAttribute("num", num);
         model.addAttribute("page", page);
     }
 
-    private void getCategory(@NotNull Model model) throws Exception {
+    private void getCategoryAndLastProduct(@NotNull Model model) throws Exception {
         model.addAttribute("listCategory", categoryService.getAll());
-    }
-
-    private void getLastProduct(@NotNull Model model) throws Exception {
         model.addAttribute("last", productService.getLastProduct());
     }
+
 }

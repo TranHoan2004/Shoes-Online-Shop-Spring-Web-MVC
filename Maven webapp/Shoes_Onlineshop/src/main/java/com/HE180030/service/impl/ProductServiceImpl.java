@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service(value = "productService")
 @Transactional(propagation = Propagation.REQUIRED)
@@ -74,14 +73,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO getProductDTOByID(int id) {
-        return null;
+        Product product = productRepository.getByID(id);
+        return convert(product);
     }
 
     @Override
-    public List<ProductDTO> getListProductDTOsByPage(int start, int end) {
-        List<Product> products = productRepository.getAll();
-        products = productRepository.getListByPage(products, start, end);
-        return products.stream().map(this::convert).collect(Collectors.toList());
+    public List<ProductDTO> getListProductDTOsByPage(@NotNull List<ProductDTO> products, int start, int end) {
+        List<Product> input = new ArrayList<>();
+        List<ProductDTO> list = new ArrayList<>();
+        for (ProductDTO product : products) {
+            input.add(convert(product));
+        }
+        input = productRepository.getListByPage(input, start, end);
+        for (Product product : input) {
+            list.add(convert(product));
+        }
+        return list;
     }
 
     @Override
@@ -106,6 +113,24 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductDTO convert(@NotNull Product product) {
         return ProductDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .image(product.getImage())
+                .image2(product.getImage2())
+                .image3(product.getImage3())
+                .image4(product.getImage4())
+                .price(product.getPrice())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .model(product.getModel())
+                .color(product.getColor())
+                .delivery(product.getDelivery())
+                .build();
+    }
+
+    private Product convert(@NotNull ProductDTO product) {
+        return Product.builder()
+                .id(product.getId())
                 .name(product.getName())
                 .image(product.getImage())
                 .image2(product.getImage2())

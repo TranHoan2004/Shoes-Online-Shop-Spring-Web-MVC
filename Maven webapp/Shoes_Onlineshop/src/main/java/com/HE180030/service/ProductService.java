@@ -16,7 +16,7 @@ public interface ProductService {
 
     ProductDTO getProductDTOByID(int id);
 
-    List<ProductDTO> getListProductDTOsByPage(int start, int end);
+    List<ProductDTO> getListProductDTOsByPage(List<ProductDTO> products, int start, int end);
 
     List<ProductDTO> getAllProductDTOsByAccountID(int sellID);
 

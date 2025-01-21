@@ -1,10 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body>
+<body onload="loadTotalMoney()">
+<div th:replace="~{menu::menu(searchForm)}"></div>
+<div class="shopping-cart">
+    <div class="px-4 px-lg-0">
+        <div class="pb-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+                        <div class="table-responsive">
+                            <div th:if="${error != null}" th:text="${error}" class="alert alert-danger"
+                                 role="alert"></div>
+                            <div th:if="${message != null}" th:text="${message}" class="alert alert-success"
+                                 role="alert"></div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="p-2 px-3 text-uppercase">Product</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase">Price</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase">Color</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase">Delivery</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase">Size</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase">Quantity</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase">Delete</div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="cart: ${listCart}">
+                                    <th:block th:each="product: ${listProduct}">
+                                        <tr th:if="${cart.product.getId() == product.getId()}">
+                                            <th scope="row">
+                                                <div class="p-2">
+                                                    <img th:src="${product.getImage()}" alt="" width="70"
+                                                         class="img-fluid rounded shadow-sm">
+                                                    <div class="ml-3 d-inline-block align-middle">
+                                                        <h5 class="mb-0"><a href="#" class="text-dark d-inline-block"
+                                                                            th:text="${product.getName()}"></a></h5>
+                                                        <span class="text-muted font-weight-normal font-italic"></span>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <td class="align-middle"><strong
+                                                    th:text="${product.getPrice() + '$'}"></strong></td>
+                                            <td class="align-middle"><strong th:text="${product.getColor()}"></strong>
+                                            </td>
+                                            <td class="align-middle"><strong
+                                                    th:text="${product.getDelivery()}"></strong></td>
 
+                                            <td class="align-middle">
+                                                <strong th:text="${cart.getSize()}"></strong>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <a th:href="@{/subAmountCart(productID=${cart.product.getId()}, amount=${cart.getAmount()})}">
+                                                    <button class="btnSub">-</button>
+                                                </a>
+                                                <strong>${o.amount}</strong>
+                                                <a th:href="@{/addAmountCart(productID=${cart.product.getId()}, amount=${cart.getAmount()})}">
+                                                    <button class="btnAdd">+</button>
+                                                </a>
+                                            </td>
+                                            <td class="align-middle">
+                                                <a th:href="@{/deleteCart(productID=${cart.product.getId()})}"
+                                                   class="text-dark">
+                                                    <button type="button" class="btn btn-danger">Delete</button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row py-5 p-4 bg-white rounded shadow-sm">
+                    <div class="col-lg-6">
+                        <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">
+                            Prepare for an invoice
+                        </div>
+                        <div class="p-4">
+                            <ul class="list-unstyled mb-4" id="contentTotalMoney"></ul>
+                            <a th:href="@{/order}" class="btn btn-dark rounded-pill py-2 btn-block text-white">Ready to pay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function loadTotalMoney() {
+        $.ajax({
+            url: "/Shoes_Onlineshop_war_exploded/totalMoneyCart",
+            type: "get", //send it through get method
+            data: {},
+            success: function (responseData) {
+                document.getElementById("contentTotalMoney").innerHTML = responseData;
+            }
+        });
+    }
+
+    window.addEventListener("load", function loadAmountCart() {
+        $.ajax({
+            url: "/Shoes_Onlineshop_war_exploded/loadAllAmountCart",
+            type: "get", //send it through get method
+            data: {},
+            success: function (responseData) {
+                document.getElementById("amountCart").innerHTML = responseData;
+            }
+        });
+    }, false);
+</script>
 </body>
 </html>

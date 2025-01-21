@@ -37,6 +37,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+    @Override
+    public String getNameByID(int id) {
+        return categoryRepository.getById(id);
+    }
+
     private CategoryDTO convert(@NotNull Category category) {
         return CategoryDTO.builder()
                 .id(category.getId())

@@ -13,7 +13,7 @@ public class AccountDTO {
     private int id;
     private String username;
     private String password;
-    private int isSell;
-    private int isAdmin;
+    private Boolean isSell;
+    private Boolean isAdmin;
     private String email;
 }

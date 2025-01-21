@@ -21,7 +21,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void insertInvoiceDTO(int accountID, double totalPrice, String context, int phone, String delivery, String name, String typePay) {
+    public void insertInvoiceDTO(int accountID, InvoiceDTO invoiceDTO) {
 
     }
 

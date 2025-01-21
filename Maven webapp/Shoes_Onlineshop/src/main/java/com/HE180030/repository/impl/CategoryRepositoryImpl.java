@@ -44,4 +44,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 .build();
         sessionFactory.getCurrentSession().merge(category);
     }
+
+    @Override
+    public String getById(int categoryId) {
+        return sessionFactory.getCurrentSession().createQuery("select c.name from Category c where c.id=:cateID", String.class)
+                .setParameter("cateID", categoryId)
+                .uniqueResult();
+    }
 }

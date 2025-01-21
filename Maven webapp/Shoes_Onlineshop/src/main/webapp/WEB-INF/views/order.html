@@ -1,10 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link th:href="@{/css/login.css}" rel="stylesheet" type="text/css"/>
+    <title>Invoice</title>
 </head>
-<body>
-
+<body onload="loadTotalMoney()">
+<div th:replace="~{menu1::menu1(${searchForm})}"></div>
+<div id="logreg-forms">
+    <form class="form" th:action="@{/add_order}" th:method="POST" th:object="${invoice}">
+        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Invoice</h1>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+                <p th:if="${mess != null}" th:text="${mess}" class="alert alert-success" role="alert"></p>
+                <tr>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="p-2 px-3 text-uppercase">Product</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="py-2 text-uppercase">Price</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="py-2 text-uppercase">Color</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="py-2 text-uppercase">Delivery</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="py-2 text-uppercase">Size</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="py-2 text-uppercase">Quantity</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                        <div class="py-2 text-uppercase">Delete</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="o: ${listCarts}">
+                    <th:block th:each="p: ${listProducts}">
+                        <tr th:if="${o.getProductID() == p.getId()}">
+                            <th scope="row">
+                                <div class="p-2">
+                                    <img th:src="${p.getImage()}" alt="" width="70" class="img-fluid rounded shadow-sm">
+                                    <div class="ml-3 d-inline-block align-middle">
+                                        <h5 class="mb-0">
+                                            <a href="#" class="text-dark d-inline-block" th:text="${p.getName()}"></a></h5>
+                                        <span class="text-muted font-weight-normal font-italic"></span>
+                                    </div>
+                                </div>
+                            </th>
+                            <td class="align-middle"><strong th:text="${p.getPrice() + '$'}"></strong></td>
+                            <td class="align-middle"><strong th:text="${p.getColor()}"></strong></td>
+                            <td class="align-middle"><strong th:text="${p.getDelivery()}"></strong></td>
+                            <td class="align-middle">
+                                <strong th:text="${o.getSize()}"></strong>
+                            </td>
+                            <td class="align-middle">
+                                <strong th:text="${o.getAmount()}"></strong>
+                            </td>
+                        </tr>
+                    </th:block>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        <label for="name">Name
+            <input th:field="*{name}" type="text" id="name" class="form-control" placeholder="Name"
+                   required="" autofocus="">
+        </label>
+        <label for="phoneNumber">Phone number
+            <input th:field="*{phone}" type="text" id="phoneNumber" class="form-control" placeholder="Phone number"
+                   required="" autofocus="">
+        </label>
+        <label for="deliveryAddress">Delivery Address
+            <input th:field="*{delivery}" type="text" id="deliveryAddress" class="form-control" placeholder="Delivery Address"
+                   required="" autofocus="">
+        </label>
+        <label for="typepay">Payment methods
+            <select th:field="*{typepay}" id="typepay">
+                <option th:value="${option1}">Bank card</option>
+                <option th:value="${ondelivery}">Payment on delivery</option>
+            </select>
+        </label>
+        <li class="d-flex justify-content-between py-3 border-bottom">
+            <strong class="text-muted">Total amount you have to pay</strong>
+            <strong th:text="${totalMoney}"></strong>
+        </li>
+        <li class="d-flex justify-content-between py-3 border-bottom">
+            <strong class="text-muted">Transport fee</strong>
+            <strong>Free ship</strong>
+        </li>
+        <li class="d-flex justify-content-between py-3 border-bottom">
+            <strong class="text-muted">VAT</strong>
+            <strong>10%</strong>
+        </li>
+        <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total payment</strong>
+            <h5 class="font-weight-bold" th:text="${totalMoneyVAT}"></h5>
+        </li>
+        <button class="btn btn-success btn-block" type="submit">
+            <i class="fas fa-american-sign-language-interpreting"></i>Dat Hang
+        </button>
+    </form>
+    <br>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script>
+    window.addEventListener("load", function loadAmountCart() {
+        $.ajax({
+            url: "/Shoes_Onlineshop_war_exploded/loadAllAmountCart",
+            type: "get", //send it through get method
+            data: {},
+            success: function (responseData) {
+                document.getElementById("amountCart").innerHTML = responseData;
+            }
+        });
+    }, false);
+</script>
 </body>
 </html>

@@ -5,21 +5,21 @@ import com.HE180030.dto.AccountDTO;
 import java.util.List;
 
 public interface AccountService {
-    AccountDTO login(String username, String password);
+    AccountDTO login(AccountDTO accountDTO);
 
-    void insertAccountDTO(String user, String pass, boolean isSell, boolean isAdmin, String email);
+    void insertAccountDTO(AccountDTO accountDTO);
 
     void deleteAccountDTOByID(int id);
 
-    void editAccountDTO(String username, String password, boolean isSell, boolean isAdmin, String email, int uID);
+    void editAccountDTO(AccountDTO accountDTO);
 
-    void updateProfile(String username, String password, String email, int uID);
+    void updateProfile(AccountDTO accountDTO);
 
-    void signIn(String user, String pass);
+    void signin(AccountDTO accountDTO);
 
     int getIdByUsername(String username);
 
-    AccountDTO getByName(String username);
+    AccountDTO getAccountDTOByName(String username);
 
     List<AccountDTO> getAllAccountDTOs();
 

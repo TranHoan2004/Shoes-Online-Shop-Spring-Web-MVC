@@ -5,7 +5,7 @@ import com.HE180030.dto.InvoiceDTO;
 import java.util.List;
 
 public interface InvoiceService {
-    void insertInvoiceDTO(int accountID, double totalPrice, String context, int phone, String delivery, String name, String typePay);
+    void insertInvoiceDTO(int accountID, InvoiceDTO invoiceDTO);
 
     void deleteInvoiceDTOByAccountID(int id);
 

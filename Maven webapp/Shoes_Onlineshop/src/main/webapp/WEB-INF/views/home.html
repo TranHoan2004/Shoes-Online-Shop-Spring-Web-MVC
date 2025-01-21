@@ -77,10 +77,12 @@
     </div>
 </div>
 
+<div th:replace="~{footer :: footer}"></div>
 <script>
+    // window.addEventListener("load", function loadAmountCart() {
     window.addEventListener("load", function loadAmountCart() {
         $.ajax({
-            url: "/Shoes_Onlineshop/loadAllAmountCart",
+            url: "/Shoes_Onlineshop_war_exploded/loadAllAmountCart",
             type: "get", //send it through get method
             data: {},
             success: function (responseData) {
@@ -88,11 +90,6 @@
             }
         });
     }, false);
-
-    function concatLink(string, id) {
-        window.location.href = string + id;
-    }
 </script>
-<div th:replace="~{footer :: footer}"></div>
 </body>
 </html>

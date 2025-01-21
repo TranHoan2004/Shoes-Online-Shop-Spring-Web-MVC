@@ -1,2 +1,6 @@
+Shoes_Onlineshop_war_exploded
 detail.html: 138 "Add to cart"
 footer: 9-12 "#nike,..." is a filter
+cart.html: 115, href "order"
+invoice: @{/export_excel_file}, method get
+line 99 order.html

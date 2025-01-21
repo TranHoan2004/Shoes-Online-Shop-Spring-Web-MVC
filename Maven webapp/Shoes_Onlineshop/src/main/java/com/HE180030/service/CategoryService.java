@@ -10,4 +10,5 @@ public interface CategoryService {
     CategoryDTO getCategoryDTOByName(String name);
 
     void insertCategoryDTO(int categoryId, String name);
+    String getNameByID(int id);
 }

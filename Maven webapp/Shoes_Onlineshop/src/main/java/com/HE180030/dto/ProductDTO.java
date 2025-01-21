@@ -1,12 +1,10 @@
 package com.HE180030.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
@@ -22,4 +20,10 @@ public class ProductDTO {
     private String image2;
     private String image3;
     private String image4;
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+               ", name='" + name + '\'';
+    }
 }
