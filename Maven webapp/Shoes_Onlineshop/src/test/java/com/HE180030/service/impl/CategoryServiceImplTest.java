@@ -29,13 +29,13 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void getAll() {
+    void getAllCategoryDTOs() {
         List<Category> mockList = Arrays.asList(
                 new Category(1, "cate1"),
                 new Category(2, "cate2")
         );
         when(categoryRepository.getAll()).thenReturn(mockList);
-        for (CategoryDTO category : categoryService.getAll()) {
+        for (CategoryDTO category : categoryService.getAllCategoryDTOs()) {
             System.out.println(category);
         }
 

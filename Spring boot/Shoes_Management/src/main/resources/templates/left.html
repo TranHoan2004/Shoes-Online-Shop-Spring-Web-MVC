@@ -1,0 +1,27 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="col-sm-3" th:fragment="left(listCategory, last)">
+    <div class="card bg-light mb-3">
+        <div class="card-header bg-primary text-white text-uppercase">
+            <i class="fa fa-list"></i> Category
+        </div>
+        <ul class="list-group category_block">
+            <p th:if="${listCategory == null}">null</p>
+            <p th:if="${listCategory.isEmpty()}">empty</p>
+            <th:block th:each="items: ${listCategory}">
+                <li class="list-group-item text-white">
+                    <a th:href="@{/category(id=${items.getId()})}" th:text="${items.getName()}"></a>
+                </li>
+            </th:block>
+        </ul>
+    </div>
+    <div class="card bg-light mb-3">
+        <div class="card-header bg-success text-white text-uppercase">Final product</div>
+        <div class="card-body">
+            <img class="img-fluid" th:src="${last.getImage()}" alt="">
+            <h5 class="card-title" th:text="${last.getName()}"></h5>
+            <p class="card-text" th:text="${last.getTitle()}"></p>
+            <p class="bloc_left_price" th:text="${last.getPrice()} + ' $'"></p>
+        </div>
+    </div>
+</div>
+</html>

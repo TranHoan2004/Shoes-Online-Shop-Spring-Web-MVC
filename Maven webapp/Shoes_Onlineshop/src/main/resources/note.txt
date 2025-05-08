@@ -4,3 +4,5 @@ footer: 9-12 "#nike,..." is a filter
 cart.html: 115, href "order"
 invoice: @{/export_excel_file}, method get
 line 99 order.html
+totalMoneyCart CartController
+name="quantity", line 99 detail.html

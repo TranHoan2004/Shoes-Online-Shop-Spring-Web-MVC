@@ -1,17 +1,14 @@
 package com.HE180030.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Builder
-@Data
+@SuperBuilder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SuppliersDTO {
-    private int id;
-    private String name;
+public class SuppliersDTO extends IdAndName{
     private String phone;
     private String email;
     private String address;
