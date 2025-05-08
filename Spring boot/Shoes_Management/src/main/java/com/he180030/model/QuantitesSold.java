@@ -11,13 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "SoLuongDaBan")
+@Table
 public class QuantitesSold {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productID")
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "soLuongDaBan")
     private int quantity;
 }

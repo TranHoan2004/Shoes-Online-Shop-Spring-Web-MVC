@@ -13,24 +13,21 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Invoice")
+@Table
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "maHD")
     private int id;
 
-    @Column(name = "tongGia")
     private double totalPrice;
 
-    @Column(name = "ngayXuat")
     private Date exportDate;
 
     @Transient
     private String context;
 
     @Transient
-    private String typepay;
+    private String typePay;
 
     @Transient
     private int phone;
@@ -42,6 +39,6 @@ public class Invoice {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accountID")
+    @JoinColumn(name = "account_id")
     private Account account;
 }

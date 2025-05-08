@@ -1,10 +1,11 @@
 package com.HE180030.repository;
 
 import com.HE180030.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductRepository {
+public interface ProductRepository extends JpaRepository<Product, Long> {
     Product getLastProduct();
 
     List<Product> getAll();

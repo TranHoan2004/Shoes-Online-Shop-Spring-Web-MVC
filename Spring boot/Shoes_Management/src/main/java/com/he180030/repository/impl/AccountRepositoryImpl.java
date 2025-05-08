@@ -11,38 +11,42 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(propagation = Propagation.REQUIRED)
-@DependsOn("sessionFactory")
+//@DependsOn("sessionFactory")
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
-    private final SessionFactory sessionFactory;
-
-    public AccountRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    private final SessionFactory sessionFactory;
+//
+//    public AccountRepositoryImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     @Override
     public List<Account> getAll() {
-        return sessionFactory.getCurrentSession().createQuery("from Account", Account.class).getResultList();
+//        return sessionFactory.getCurrentSession().createQuery("from Account", Account.class).getResultList();
+        return null;
     }
 
     @Override
     public Account getById(int id) {
-        return sessionFactory.getCurrentSession().get(Account.class, id);
+//        return sessionFactory.getCurrentSession().get(Account.class, id);
+        return null;
     }
 
     @Override
     public Account login(String username, String password) {
-        return sessionFactory.getCurrentSession().createQuery("from Account a where a.username=:user and a.password=:pass", Account.class)
-                .setParameter("user", username)
-                .setParameter("pass", password)
-                .uniqueResult();
+//        return sessionFactory.getCurrentSession().createQuery("from Account a where a.username=:user and a.password=:pass", Account.class)
+//                .setParameter("user", username)
+//                .setParameter("pass", password)
+//                .uniqueResult();
+        return null;
     }
 
     @Override
     public Account getByName(String username) {
-        return sessionFactory.getCurrentSession().createQuery("from Account a where a.username=:username", Account.class)
-                .setParameter("username", username)
-                .uniqueResult();
+//        return sessionFactory.getCurrentSession().createQuery("from Account a where a.username=:username", Account.class)
+//                .setParameter("username", username)
+//                .uniqueResult();
+        return null;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         account.setIsSell(isSell);
         account.setIsAdmin(isAdmin);
         account.setEmail(email);
-        sessionFactory.getCurrentSession().merge(account);
+//        sessionFactory.getCurrentSession().merge(account);
     }
 
     @Override
@@ -62,16 +66,17 @@ public class AccountRepositoryImpl implements AccountRepository {
 //        for (int i = start; i < end; i++) {
 //            arr.add(list.get(i));
 //        }
-        return sessionFactory.getCurrentSession().createQuery("from Account", Account.class)
-                .setFirstResult(start)
-                .setMaxResults(end)
-                .getResultList();
+//        return sessionFactory.getCurrentSession().createQuery("from Account", Account.class)
+//                .setFirstResult(start)
+//                .setMaxResults(end)
+//                .getResultList();
+        return null;
     }
 
     @Override
     public void deleteByID(int id) {
         Account account = getById(id);
-        sessionFactory.getCurrentSession().remove(account);
+//        sessionFactory.getCurrentSession().remove(account);
     }
 
     @Override
@@ -82,7 +87,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         account.setIsSell(isSell);
         account.setIsAdmin(isAdmin);
         account.setEmail(email);
-        sessionFactory.getCurrentSession().merge(account);
+//        sessionFactory.getCurrentSession().merge(account);
     }
 
     @Override
@@ -91,7 +96,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         account.setUsername(username);
         account.setPassword(password);
         account.setEmail(email);
-        sessionFactory.getCurrentSession().merge(account);
+//        sessionFactory.getCurrentSession().merge(account);
     }
 
     @Override
@@ -99,13 +104,14 @@ public class AccountRepositoryImpl implements AccountRepository {
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(pass);
-        sessionFactory.getCurrentSession().merge(account);
+//        sessionFactory.getCurrentSession().merge(account);
     }
 
     @Override
     public int getIdByUsername(String username) {
-        return sessionFactory.getCurrentSession().createQuery("select a.id from Account a where a.username=:username", Integer.class)
-                .setParameter("username", username)
-                .uniqueResult();
+//        return sessionFactory.getCurrentSession().createQuery("select a.id from Account a where a.username=:username", Integer.class)
+//                .setParameter("username", username)
+//                .uniqueResult();
+        return 0;
     }
 }

@@ -11,44 +11,47 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(propagation = Propagation.REQUIRED)
-@DependsOn("sessionFactory")
+//@DependsOn("sessionFactory")
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
-    private final SessionFactory sessionFactory;
-
-    public CategoryRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    private final SessionFactory sessionFactory;
+//
+//    public CategoryRepositoryImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     @Override
     public List<Category> getAll() {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Category", Category.class).getResultList();
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Category", Category.class).getResultList();
+        return null;
     }
 
     @Override
     public Category getByName(String name) {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Category c where c.name=:name", Category.class)
-                .setParameter("name", name)
-                .uniqueResult(); // uniqueResult tra ve 1 null, dung getSingleResult thi nem ra 1 exception neu k tim thay
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Category c where c.name=:name", Category.class)
+//                .setParameter("name", name)
+//                .uniqueResult(); // uniqueResult tra ve 1 null, dung getSingleResult thi nem ra 1 exception neu k tim thay
+        return null;
     }
 
     @Override
     public void insert(int categoryId, String name) {
-        Category category = Category.builder()
-                .id(categoryId)
-                .name(name)
-                .build();
-        sessionFactory.getCurrentSession().merge(category);
+//        Category category = Category.builder()
+//                .id(categoryId)
+//                .name(name)
+//                .build();
+//        sessionFactory.getCurrentSession().merge(category);
     }
 
     @Override
     public String getById(int categoryId) {
-        return sessionFactory.getCurrentSession().createQuery("select c.name from Category c where c.id=:cateID", String.class)
-                .setParameter("cateID", categoryId)
-                .uniqueResult();
+//        return sessionFactory.getCurrentSession().createQuery("select c.name from Category c where c.id=:cateID", String.class)
+//                .setParameter("cateID", categoryId)
+//                .uniqueResult();
+        return null;
     }
 }

@@ -23,12 +23,10 @@ import java.util.logging.Logger;
 public class HomeController {
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final AccountService accountService;
 
-    public HomeController(ProductService productService, CategoryService categoryService, AccountService accountService) {
+    public HomeController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
         this.categoryService = categoryService;
-        this.accountService = accountService;
     }
 
     @GetMapping("/")

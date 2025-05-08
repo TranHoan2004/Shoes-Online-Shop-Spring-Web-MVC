@@ -1,9 +1,12 @@
 package com.HE180030.controller;
 
 import com.HE180030.dto.*;
+import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,5 +110,13 @@ public class ProductController {
         model.addAttribute("listProducts", listByPage);
         model.addAttribute("num", num);
         model.addAttribute("page", page);
+    }
+
+    // new code
+    @GetMapping("/product/list")
+    public ResponseEntity<?> displayAllProducts(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            PagedResourcesAssembler<ProductResponse> assembler) {
+        return null;
     }
 }

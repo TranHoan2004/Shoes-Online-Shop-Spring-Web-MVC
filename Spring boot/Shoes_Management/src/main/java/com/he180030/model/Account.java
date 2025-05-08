@@ -7,46 +7,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Account")
+@Table
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "uID")
     private int id;
 
-    @Column(name = "[user]", length = 10)
+    @Column(length = 10)
     private String username;
 
-    @Column(name = "pass", length = 10)
+    @Column(length = 10)
     private String password;
 
-    @Column(columnDefinition = "bit")
     private Boolean isSell;
 
-    @Column(columnDefinition = "bit")
     private Boolean isAdmin;
 
     @Column(length = 50)
     private String email;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Cart> carts;
+    private Set<Cart> carts;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Product> products;
+    private Set<Product> products;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Invoice> invoices;
+    private Set<Invoice> invoices;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Review> reviews;
+    private Set<Review> reviews;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<TotalSalesTarget> totalSalesTargetList;
+    private Set<TotalSalesTarget> totalSalesTargetList;
 }

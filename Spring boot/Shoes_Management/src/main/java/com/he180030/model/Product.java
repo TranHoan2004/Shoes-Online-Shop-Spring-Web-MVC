@@ -7,13 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Product")
+@Table
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +25,13 @@ public class Product {
 
     @Column(length = 500)
     private String image;
+
     private double price;
 
     @Column(length = 500)
     private String title;
 
-    @Column(columnDefinition = "nvarchar(max)")
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(length = 50)
@@ -51,19 +53,19 @@ public class Product {
     private String image4;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cateID")
+    @JoinColumn(name = "cate_id")
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    private List<Cart> carts;
+    private Set<Cart> carts;
 
     @OneToMany(mappedBy = "product")
-    private List<Review> reviews;
+    private Set<Review> reviews;
 
     @OneToMany(mappedBy = "product")
-    private List<QuantitesSold> quantitesSold;
+    private Set<QuantitesSold> quantitesSold;
 
     @ManyToOne
-    @JoinColumn(name = "sell_ID")
+    @JoinColumn(name = "sell_id")
     private Account account;
 }

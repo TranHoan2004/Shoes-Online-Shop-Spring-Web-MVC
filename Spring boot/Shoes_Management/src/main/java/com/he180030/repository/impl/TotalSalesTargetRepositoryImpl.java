@@ -8,20 +8,20 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(propagation = Propagation.REQUIRED)
-@DependsOn("sessionFactory")
+//@DependsOn("sessionFactory")
 @Repository
 public class TotalSalesTargetRepositoryImpl implements TotalSalesTargetRepository {
-    private final SessionFactory sessionFactory;
-
-    public TotalSalesTargetRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    private final SessionFactory sessionFactory;
+//
+//    public TotalSalesTargetRepositoryImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     @Override
     public void deleteByAccountID(int id) {
-        sessionFactory.getCurrentSession()
-                .createQuery("delete TotalSalesTarget t where t.account.id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
+//        sessionFactory.getCurrentSession()
+//                .createQuery("delete TotalSalesTarget t where t.account.id = :id")
+//                .setParameter("id", id)
+//                .executeUpdate();
     }
 }

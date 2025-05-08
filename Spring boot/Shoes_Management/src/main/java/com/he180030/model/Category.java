@@ -7,29 +7,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Category")
+@Table
 public class Category {
     @Id
-    @Column(name = "cid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "cname", length = 50)
+    @Column(length = 50)
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    private Set<Product> products;
 
     @OneToMany(mappedBy = "category")
-    private List<Supplier> suppliers;
-
-    public Category(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private Set<Supplier> suppliers;
 }

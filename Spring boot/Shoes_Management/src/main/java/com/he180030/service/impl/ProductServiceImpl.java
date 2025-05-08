@@ -1,24 +1,33 @@
 package com.HE180030.service.impl;
 
 import com.HE180030.dto.ProductDTO;
+import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
 import com.HE180030.service.ProductService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-@Service(value = "productService")
-@Transactional(propagation = Propagation.REQUIRED)
+@Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepository productRepository;
+    ProductRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductServiceImpl(ProductRepository repo) {
+        this.repo = repo;
     }
 
     @Override
@@ -28,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO getLastProduct() throws Exception {
-        Product product = productRepository.getLastProduct();
+        Product product = repo.getLastProduct();
         if (product != null) {
             return ProductDTO.builder()
                     .delivery(product.getDelivery())
@@ -50,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getAllProductDTOs() {
         List<ProductDTO> list = new ArrayList<>();
-        for (Product product : productRepository.getAll()) {
+        for (Product product : repo.getAll()) {
             list.add(convert(product));
         }
         return list;
@@ -58,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProductDTOsByCategoryID(int categoryId) {
-        List<Product> list = productRepository.getAllByCategoryID(categoryId);
+        List<Product> list = repo.getAllByCategoryID(categoryId);
         List<ProductDTO> result = new ArrayList<>();
         for (Product product : list) {
             result.add(convert(product));
@@ -73,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO getProductDTOByID(int id) {
-        Product product = productRepository.getByID(id);
+        Product product = repo.getByID(id);
         return convert(product);
     }
 
@@ -84,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
         for (ProductDTO product : products) {
             input.add(convert(product));
         }
-        input = productRepository.getListByPage(input, start, end);
+        input = repo.getListByPage(input, start, end);
         for (Product product : input) {
             list.add(convert(product));
         }
@@ -109,6 +118,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void insert(ProductDTO productDTO) {
 
+    }
+
+    @Override
+    public Page<ProductResponse> getAllProductDTO(int page, int size) {
+        logger.info("getAllProductDTO");
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = repo.findAll(pageable);
+        long count = repo.count();
+        return getProductResponses(pageable, products, count);
     }
 
     private ProductDTO convert(@NotNull Product product) {
@@ -143,5 +161,26 @@ public class ProductServiceImpl implements ProductService {
                 .color(product.getColor())
                 .delivery(product.getDelivery())
                 .build();
+    }
+
+    private ProductResponse convertToResponse(@NotNull Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .image(product.getImage())
+                .price(product.getPrice())
+                .title(product.getTitle())
+                .build();
+    }
+
+    @Contract("_, _, _ -> new")
+    private @NotNull Page<ProductResponse> getProductResponses(Pageable pageable, @NotNull Page<Product> products, long count) {
+        if (products.isEmpty()) {
+            throw new EntityNotFoundException("No posts");
+        }
+        List<Product> postDTOs = products.getContent();
+        List<ProductResponse> postDTOList = new ArrayList<>();
+        postDTOs.forEach(p -> postDTOList.add(convertToResponse(p)));
+        return new PageImpl<>(postDTOList, pageable, count);
     }
 }

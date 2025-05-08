@@ -13,20 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(propagation = Propagation.REQUIRED)
-@DependsOn("sessionFactory")
+//@DependsOn("sessionFactory")
 @Repository
 public class InvoiceRepositoryImpl implements InvoiceRepository {
-    private final SessionFactory sessionFactory;
-
-    public InvoiceRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    private final SessionFactory sessionFactory;
+//
+//    public InvoiceRepositoryImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     @Override
     public void deleteByAccountID(int id) {
-        sessionFactory.getCurrentSession().createQuery("delete from Invoice i where i.account.id=:id", Invoice.class)
-                .setParameter("id", id)
-                .executeUpdate();
+//        sessionFactory.getCurrentSession().createQuery("delete from Invoice i where i.account.id=:id", Invoice.class)
+//                .setParameter("id", id)
+//                .executeUpdate();
     }
 
     @Override
@@ -34,26 +34,27 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                        String context, int phone,
                        String delivery, String name,
                        String typePay) {
-        Session session = sessionFactory.getCurrentSession();
-        Account account = session.get(Account.class, accountID);
-        Invoice invoice = Invoice.builder()
-                .account(account)
-                .totalPrice(totalPrice)
-                .context(context)
-                .phone(phone)
-                .delivery(delivery)
-                .name(name)
-                .typepay(typePay)
-                .build();
-        session.merge(invoice);
+//        Session session = sessionFactory.getCurrentSession();
+//        Account account = session.get(Account.class, accountID);
+//        Invoice invoice = Invoice.builder()
+//                .account(account)
+//                .totalPrice(totalPrice)
+//                .context(context)
+//                .phone(phone)
+//                .delivery(delivery)
+//                .name(name)
+//                .typepay(typePay)
+//                .build();
+//        session.merge(invoice);
     }
 
     @Override
     public List<Invoice> getAllInvoiceByID(int id) {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Invoice i where i.account.id=:id", Invoice.class)
-                .setParameter("id", id)
-                .getResultList();
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Invoice i where i.account.id=:id", Invoice.class)
+//                .setParameter("id", id)
+//                .getResultList();
+        return null;
     }
 }

@@ -15,22 +15,21 @@ import lombok.NoArgsConstructor;
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idSupplier")
     private int id;
 
-    @Column(name = "nameSupplier", length = 100)
+    @Column(length = 100)
     private String name;
 
-    @Column(name = "phoneSupplier", length = 50)
+    @Column(length = 50)
     private String phone;
 
-    @Column(name = "emailSupplier", length = 200)
+    @Column(length = 200)
     private String email;
 
-    @Column(name = "addressSupplier", length = 200)
+    @Column( length = 200)
     private String address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cateID")
+    @JoinColumn(name = "cate_id")
     private Category category;
 }

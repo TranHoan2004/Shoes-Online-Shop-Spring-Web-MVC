@@ -16,60 +16,64 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Transactional(propagation = Propagation.REQUIRED)
-@DependsOn("sessionFactory")
+//@DependsOn("sessionFactory")
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
-    @Autowired
-    private SessionFactory sessionFactory;
-
+//    private final SessionFactory sessionFactory;
+//
 //    public ProductRepositoryImpl(SessionFactory sessionFactory) {
 //        this.sessionFactory = sessionFactory;
 //    }
 
     @Override
     public Product getLastProduct() {
-        return sessionFactory.getCurrentSession()
-                .createQuery(
-                        "select p from Product p " +
-                        "order by p.id desc", Product.class)
-                .setMaxResults(1)
-                .uniqueResult();
+//        return sessionFactory.getCurrentSession()
+//                .createQuery(
+//                        "select p from Product p " +
+//                        "order by p.id desc", Product.class)
+//                .setMaxResults(1)
+//                .uniqueResult();
+        return null;
     }
 
     @Override
     public List<Product> getAll() {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Product", Product.class)
-                .getResultList();
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Product", Product.class)
+//                .getResultList();
+        return null;
     }
 
     @Override
     public List<Product> getAllByCategoryID(int categoryID) {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Product p " +
-                             "where p.category.id=:categoryID " +
-                             "order by p.id desc", Product.class)
-                .setParameter("categoryID", categoryID)
-                .getResultList();
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Product p " +
+//                             "where p.category.id=:categoryID " +
+//                             "order by p.id desc", Product.class)
+//                .setParameter("categoryID", categoryID)
+//                .getResultList();
+        return null;
     }
 
     @Override
     // getAllproductbyTxt
     public List<Product> searchByName(String txt) {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Product p " +
-                             "where p.name like :name " +
-                             "order by p.id desc", Product.class)
-                .setParameter("name", "%" + txt + "%")
-                .getResultList();
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Product p " +
+//                             "where p.name like :name " +
+//                             "order by p.id desc", Product.class)
+//                .setParameter("name", "%" + txt + "%")
+//                .getResultList();
+        return null;
     }
 
     @Override
     public Product getByID(int id) {
-        return sessionFactory.getCurrentSession().get(Product.class, id);
+//        return sessionFactory.getCurrentSession().get(Product.class, id);
+        return null;
     }
 
     @Override
@@ -84,30 +88,31 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     // getAllproductbySellID
     public List<Product> getAllByAccountID(int id) {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Product p " +
-                             "where p.account.id=:id " +
-                             "order by p.id desc", Product.class)
-                .setParameter("id", id)
-                .getResultList();
+//        return sessionFactory
+//                .getCurrentSession()
+//                .createQuery("from Product p " +
+//                             "where p.account.id=:id " +
+//                             "order by p.id desc", Product.class)
+//                .setParameter("id", id)
+//                .getResultList();
+        return null;
     }
 
     @Override
     // deleteProductBySellID
     public void deleteByAccountID(int id) {
-        sessionFactory.getCurrentSession()
-                .createQuery("delete from Product p where p.account.id=:id", Product.class)
-                .setParameter("id", id)
-                .executeUpdate();
+//        sessionFactory.getCurrentSession()
+//                .createQuery("delete from Product p where p.account.id=:id", Product.class)
+//                .setParameter("id", id)
+//                .executeUpdate();
     }
 
     @Override
     public void deleteByID(int id) {
-        sessionFactory.getCurrentSession()
-                .createQuery("delete from Product p where p.id=:id", Product.class)
-                .setParameter("id", id)
-                .executeUpdate();
+//        sessionFactory.getCurrentSession()
+//                .createQuery("delete from Product p where p.id=:id", Product.class)
+//                .setParameter("id", id)
+//                .executeUpdate();
     }
 
     @Override
@@ -115,55 +120,55 @@ public class ProductRepositoryImpl implements ProductRepository {
                        String title, String description, int categoryId,
                        String model, String color, String delivery,
                        String image2, String image3, String image4, int id) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        Product product = session.createQuery("from Product p where p.id=:id", Product.class)
-                .setParameter("id", id).uniqueResult();
-        Category category = session.createQuery("from Category c where c.id=:id", Category.class)
-                .setParameter("id", categoryId).uniqueResult();
-        if (product == null) {
-            throw new Exception("There is no product has id " + id);
-        }
-        product = Product.builder()
-                .name(name)
-                .image(image)
-                .price(price)
-                .title(title)
-                .description(description)
-                .category(category)
-                .model(model)
-                .color(color)
-                .delivery(delivery)
-                .image2(image2)
-                .image3(image3)
-                .image4(image4)
-                .build();
-        session.merge(product);
+//        Session session = sessionFactory.getCurrentSession();
+//        Product product = session.createQuery("from Product p where p.id=:id", Product.class)
+//                .setParameter("id", id).uniqueResult();
+//        Category category = session.createQuery("from Category c where c.id=:id", Category.class)
+//                .setParameter("id", categoryId).uniqueResult();
+//        if (product == null) {
+//            throw new Exception("There is no product has id " + id);
+//        }
+//        product = Product.builder()
+//                .name(name)
+//                .image(image)
+//                .price(price)
+//                .title(title)
+//                .description(description)
+//                .category(category)
+//                .model(model)
+//                .color(color)
+//                .delivery(delivery)
+//                .image2(image2)
+//                .image3(image3)
+//                .image4(image4)
+//                .build();
+//        session.merge(product);
     }
 
     @Override
     public void insert(String name, String image, double price, String title,
                        String description, int categoryId, int accountId,
                        String model, String color, String delivery, String image2, String image3, String image4) {
-        Session session = sessionFactory.getCurrentSession();
-        Category category = session.createQuery("from Category c where c.id=:id", Category.class)
-                .setParameter("id", categoryId).uniqueResult();
-        Account account = session.createQuery("from Account where id=:id", Account.class)
-                .setParameter("id", accountId).uniqueResult();
-        Product product = Product.builder()
-                .name(name)
-                .image(image)
-                .price(price)
-                .title(title)
-                .description(description)
-                .category(category)
-                .account(account)
-                .model(model)
-                .color(color)
-                .delivery(delivery)
-                .image2(image2)
-                .image3(image3)
-                .image4(image4)
-                .build();
-        session.merge(product);
+//        Session session = sessionFactory.getCurrentSession();
+//        Category category = session.createQuery("from Category c where c.id=:id", Category.class)
+//                .setParameter("id", categoryId).uniqueResult();
+//        Account account = session.createQuery("from Account where id=:id", Account.class)
+//                .setParameter("id", accountId).uniqueResult();
+//        Product product = Product.builder()
+//                .name(name)
+//                .image(image)
+//                .price(price)
+//                .title(title)
+//                .description(description)
+//                .category(category)
+//                .account(account)
+//                .model(model)
+//                .color(color)
+//                .delivery(delivery)
+//                .image2(image2)
+//                .image3(image3)
+//                .image4(image4)
+//                .build();
+//        session.merge(product);
     }
 }
