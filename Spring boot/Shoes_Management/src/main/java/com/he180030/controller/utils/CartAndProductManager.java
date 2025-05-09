@@ -18,11 +18,11 @@ public class CartAndProductManager {
         this.productService = productService;
     }
 
-    public List<CartDTO> getCartDTOs(int id) {
-        return cartService.getCartDTOByAccountID(id);
-    }
+//    public List<CartDTO> getCartDTOs(int id) {
+//        return cartService.getCartDTOByAccountID(id);
+//    }
 
-    public List<ProductDTO> getProductDTOs() {
-        return productService.getAllProductDTOs();
-    }
+//    public List<ProductDTO> getProductDTOs() {
+//        return productService.getAllProductDTOs();
+//    }
 }

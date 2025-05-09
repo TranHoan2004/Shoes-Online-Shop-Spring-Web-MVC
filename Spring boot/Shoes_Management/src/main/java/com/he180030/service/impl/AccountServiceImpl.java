@@ -18,67 +18,6 @@ public class AccountServiceImpl implements AccountService {
         this.accountRepository = accountRepository;
     }
 
-    @Override
-    public void deleteAccountDTOByID(int id) {
-
-    }
-
-    @Override
-    public AccountDTO login(AccountDTO accountDTO) {
-        return null;
-    }
-
-    @Override
-    public void insertAccountDTO(AccountDTO accountDTO) {
-
-    }
-
-    @Override
-    public void editAccountDTO(AccountDTO accountDTO) {
-
-    }
-
-    @Override
-    public void updateProfile(AccountDTO accountDTO) {
-        Account account = convert(accountDTO);
-        accountRepository.updateProfile(account.getUsername(), account.getPassword(), account.getEmail(), account.getId());
-    }
-
-    @Override
-    public void signin(AccountDTO accountDTO) {
-
-    }
-
-    @Override
-    public int getIdByUsername(String username) {
-        return 0;
-    }
-
-    @Override
-    public AccountDTO getAccountDTOByName(String username) {
-        return null;
-    }
-
-    @Override
-    public List<AccountDTO> getAllAccountDTOs() {
-        List<Account> list = accountRepository.getAll();
-        List<AccountDTO> accounts = new ArrayList<>();
-        for (Account account : list) {
-            accounts.add(convert(account));
-        }
-        return accounts;
-    }
-
-    @Override
-    public AccountDTO getAccountDTOById(int id) {
-        return null;
-    }
-
-    @Override
-    public List<AccountDTO> getListAccountDTOsByPage(List<AccountDTO> list, int start, int end) {
-        return null;
-    }
-
     private AccountDTO convert(@NotNull Account account) {
         return AccountDTO.builder()
                 .id(account.getId())

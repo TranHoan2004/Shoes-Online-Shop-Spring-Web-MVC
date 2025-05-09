@@ -18,30 +18,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    @Override
-    public List<CategoryDTO> getAllCategoryDTOs() {
-        List<CategoryDTO> list = new ArrayList<>();
-        for (Category c : categoryRepository.getAll()) {
-            list.add(convert(c));
-        }
-        return list;
-    }
-
-    @Override
-    public CategoryDTO getCategoryDTOByName(String name) {
-        return null;
-    }
-
-    @Override
-    public void insertCategoryDTO(int categoryId, String name) {
-
-    }
-
-    @Override
-    public String getNameByID(int id) {
-        return categoryRepository.getById(id);
-    }
-
     private CategoryDTO convert(@NotNull Category category) {
         return CategoryDTO.builder()
                 .id(category.getId())

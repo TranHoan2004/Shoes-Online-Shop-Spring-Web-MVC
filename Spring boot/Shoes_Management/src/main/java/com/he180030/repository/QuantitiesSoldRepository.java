@@ -1,5 +1,10 @@
 package com.HE180030.repository;
 
-public interface QuantitiesSoldRepository {
-    void deleteByProductID(int productID);
+import com.HE180030.model.QuantitesSold;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface QuantitiesSoldRepository extends JpaRepository<QuantitesSold, Integer> {
+//    void deleteByProductID(int productID);
 }

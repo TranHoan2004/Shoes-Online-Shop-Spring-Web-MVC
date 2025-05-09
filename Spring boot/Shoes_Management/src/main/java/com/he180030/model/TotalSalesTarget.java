@@ -11,11 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "TotalSalesTarget")
+@Table
 public class TotalSalesTarget {
     @Id
+    private int id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @MapsId
     private Account account;
 
     private float totalTarget;

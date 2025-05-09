@@ -11,9 +11,4 @@ public class QuantitiesSoldServiceImpl implements QuantitiesSoldService {
     public QuantitiesSoldServiceImpl(QuantitiesSoldRepository repository) {
         quantitiesSoldRepository = repository;
     }
-
-    @Override
-    public void deleteQuantitiesSoldDTOByProductID(int productID) {
-
-    }
 }

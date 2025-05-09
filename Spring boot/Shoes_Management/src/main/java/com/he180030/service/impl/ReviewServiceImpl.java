@@ -11,14 +11,4 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewServiceImpl(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
-
-    @Override
-    public void deleteReviewDTOByAccountID(int id) {
-
-    }
-
-    @Override
-    public void deleteReviewDTOByProductID(int productID) {
-
-    }
 }

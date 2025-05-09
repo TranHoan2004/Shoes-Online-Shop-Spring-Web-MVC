@@ -17,56 +17,6 @@ public class CartServiceImpl implements CartService {
         this.cartRepository = cartRepository;
     }
 
-    @Override
-    public void create(int accountID, int productID, int amount, String size) {
-
-    }
-
-    @Override
-    public void updateAmountCartDTO(int accountID, int productID, int amount) {
-
-    }
-
-    @Override
-    public void deleteCartDTOByProductID(int productID) {
-
-    }
-
-    @Override
-    public void deleteCartDTOByAccountID(int id) {
-
-    }
-
-    @Override
-    public List<CartDTO> getCartDTOByAccountID(int accountID) {
-        List<Cart> list = cartRepository.getByAccountID(accountID);
-        List<CartDTO> carts = new ArrayList<>();
-        for (Cart cart : list) {
-            carts.add(convertToCartDTO(cart));
-        }
-        return carts;
-    }
-
-    @Override
-    public CartDTO getCartDTOByAccountIDAndProductID(int accountID, int productID, String size) {
-        return null;
-    }
-
-    @Override
-    public void createAmountAndSize(int accountID, int productID, int amount, String size) {
-
-    }
-
-    @Override
-    public void editAmountAndSize(int accountID, int productID, int amount, String size) {
-
-    }
-
-    @Override
-    public void editAmount(int accountID, int productID, int amount) {
-
-    }
-
     private CartDTO convertToCartDTO(Cart cart) {
         return CartDTO.builder()
                 .amount(cart.getAmount())

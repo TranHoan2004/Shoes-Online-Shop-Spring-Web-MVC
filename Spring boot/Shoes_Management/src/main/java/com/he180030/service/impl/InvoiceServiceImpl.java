@@ -14,19 +14,4 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository) {
         this.invoiceRepository = invoiceRepository;
     }
-
-    @Override
-    public void deleteInvoiceDTOByAccountID(int id) {
-
-    }
-
-    @Override
-    public void insertInvoiceDTO(int accountID, InvoiceDTO invoiceDTO, String context) {
-
-    }
-
-    @Override
-    public List<InvoiceDTO> getAllInvoiceByID(int id) {
-        return null;
-    }
 }

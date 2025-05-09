@@ -11,9 +11,4 @@ public class TotalSalesTargetServiceImpl implements TotalSalesTargetService {
     public TotalSalesTargetServiceImpl(TotalSalesTargetRepository repository) {
         this.repository = repository;
     }
-
-    @Override
-    public void deleteTotalSalesSpendDTOByAccountID(int id) {
-
-    }
 }

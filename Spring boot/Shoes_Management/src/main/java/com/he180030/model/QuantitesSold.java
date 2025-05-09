@@ -14,8 +14,11 @@ import lombok.NoArgsConstructor;
 @Table
 public class QuantitesSold {
     @Id
+    private int id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @MapsId
     private Product product;
 
     private int quantity;
