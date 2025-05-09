@@ -1,10 +1,8 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
@@ -12,16 +10,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TotalSalesTarget {
     @Id
-    private int id;
+    int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId
-    private Account account;
+    Account account;
 
-    private float totalTarget;
+    float totalTarget;
 
-    private float totalSales;
+    float totalSales;
 }

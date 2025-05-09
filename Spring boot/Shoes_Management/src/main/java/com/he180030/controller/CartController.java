@@ -1,35 +1,37 @@
 package com.HE180030.controller;
 
-import com.HE180030.controller.utils.CartAndProductManager;
 import com.HE180030.dto.AccountDTO;
-import com.HE180030.dto.CartDTO;
-import com.HE180030.dto.CartStatus;
-import com.HE180030.dto.ProductDTO;
+import com.HE180030.dto.response.ApiResponse;
+import com.HE180030.dto.response.CartResponse;
 import com.HE180030.service.CartService;
 import com.HE180030.service.ProductService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
-@Controller
+@RestController
+@RequestMapping("/cart")
 public class CartController {
     private final CartService cartService;
-    //    private final ProductService productService;
-    private final CartAndProductManager manager;
 
-    public CartController(CartService cartService, ProductService productService, CartAndProductManager manager) {
+    public CartController(CartService cartService, ProductService productService) {
         this.cartService = cartService;
-//        this.productService = productService;
-        this.manager = manager;
+    }
+
+    @GetMapping("/amount")
+    public ResponseEntity<?> loadAmountCart(HttpSession session) {
+        int totalAmountCart = 0;
+        AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
+        if (accountDTO != null) {
+            int accountID = accountDTO.getId();
+            List<CartResponse> list = cartService.getCartDTOByAccountID(accountID);
+            totalAmountCart = list.size();
+        }
+        return ResponseEntity.ok(ApiResponse.builder().code(HttpStatus.OK.value()).message("Total amount of cart is: " + totalAmountCart).data(totalAmountCart).build());
     }
 }

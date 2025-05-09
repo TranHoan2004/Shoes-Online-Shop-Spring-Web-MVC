@@ -14,7 +14,7 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+    show-sql: false
     open-in-view: false
 
   # Java mail sender
@@ -29,5 +29,9 @@ spring:
           auth: true
           starttls:
             enable: true
+  security:
+    user:
+      name: user
+      password: 123
   config:
     import: "optional:file:.env[.properties]"

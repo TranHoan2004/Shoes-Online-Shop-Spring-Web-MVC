@@ -1,12 +1,10 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -14,31 +12,32 @@ import java.util.Date;
 @Builder
 @Entity
 @Table
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
-    private double totalPrice;
+    double totalPrice;
 
-    private Date exportDate;
-
-    @Transient
-    private String context;
+    LocalDate exportDate;
 
     @Transient
-    private String typePay;
+    String context;
 
     @Transient
-    private int phone;
+    String typePay;
 
     @Transient
-    private String delivery;
+    int phone;
 
     @Transient
-    private String name;
+    String delivery;
+
+    @Transient
+    String name;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
-    private Account account;
+    Account account;
 }

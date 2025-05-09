@@ -1,6 +1,5 @@
 package com.HE180030.service.impl;
 
-import com.HE180030.dto.ProductDTO;
 import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
@@ -37,6 +36,16 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> products = repo.findAll(pageable);
         long count = repo.count();
         return getProductResponses(pageable, products, count);
+    }
+
+    @Override
+    public ProductResponse getLastProduct() {
+        return convertToResponse(repo.findLastProduct());
+    }
+
+    @Override
+    public List<Product> getById(int id) {
+        return repo.findByCategoryId(id);
     }
 
     private ProductResponse convertToResponse(@NotNull Product product) {

@@ -1,10 +1,9 @@
 package com.HE180030.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Set;
@@ -15,17 +14,20 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
     @Column(length = 50)
-    private String name;
+    String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
-    private Set<Product> products;
+    Set<Product> products;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
-    private Set<Supplier> suppliers;
+    Set<Supplier> suppliers;
 }

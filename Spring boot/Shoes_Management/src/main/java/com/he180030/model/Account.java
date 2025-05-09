@@ -1,10 +1,9 @@
 package com.HE180030.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Set;
@@ -15,36 +14,41 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
     @Column(length = 10)
-    private String username;
+    String username;
 
     @Column(length = 10)
-    private String password;
+    String password;
 
-    private Boolean isSell;
+    Boolean isSell;
 
-    private Boolean isAdmin;
+    Boolean isAdmin;
 
-    @Column(length = 50)
-    private String email;
+    String email;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<Cart> carts;
+    Set<Cart> carts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<Product> products;
+    Set<Product> products;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<Invoice> invoices;
+    Set<Invoice> invoices;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<Review> reviews;
+    Set<Review> reviews;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<TotalSalesTarget> totalSalesTargetList;
+    Set<TotalSalesTarget> totalSalesTargetList;
 }

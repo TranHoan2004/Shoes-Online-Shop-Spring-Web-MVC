@@ -14,4 +14,5 @@ public class ApiResponse<T> {
     int code;
     String message;
     T data;
+    int dataSize;
 }

@@ -1,35 +1,34 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Supplier")
+@Table
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
     @Column(length = 100)
-    private String name;
+    String name;
 
     @Column(length = 50)
-    private String phone;
+    String phone;
 
     @Column(length = 200)
-    private String email;
+    String email;
 
     @Column( length = 200)
-    private String address;
+    String address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cate_id")
-    private Category category;
+    Category category;
 }

@@ -1,10 +1,9 @@
 package com.HE180030.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Set;
@@ -15,57 +14,61 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
     @Column(length = 200)
-    private String name;
+    String name;
 
     @Column(length = 500)
-    private String image;
+    String image;
 
-    private double price;
+    double price;
 
     @Column(length = 500)
-    private String title;
+    String title;
 
     @Column(columnDefinition = "LONGTEXT")
-    private String description;
+    String description;
 
     @Column(length = 50)
-    private String model;
+    String model;
 
     @Column(length = 50)
-    private String color;
+    String color;
 
     @Column(length = 50)
-    private String delivery;
+    String delivery;
 
     @Column(length = 500)
-    private String image2;
+    String image2;
 
     @Column(length = 500)
-    private String image3;
+    String image3;
 
     @Column(length = 500)
-    private String image4;
+    String image4;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "cate_id")
-    private Category category;
+    Category category;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private Set<Cart> carts;
+    Set<Cart> carts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private Set<Review> reviews;
+    Set<Review> reviews;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private Set<QuantitesSold> quantitesSold;
+    Set<QuantitesSold> quantitesSold;
 
     @ManyToOne
     @JoinColumn(name = "sell_id")
-    private Account account;
+    Account account;
 }
