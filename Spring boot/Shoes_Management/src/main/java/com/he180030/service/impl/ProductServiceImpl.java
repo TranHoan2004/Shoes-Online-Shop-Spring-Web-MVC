@@ -1,5 +1,6 @@
 package com.HE180030.service.impl;
 
+import com.HE180030.dto.request.AddProductRequest;
 import com.HE180030.dto.response.ProductDetailResponse;
 import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.model.Product;
@@ -46,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getById(int id) {
+    public List<ProductResponse> getByCategoryId(int id) {
         return repo.findByCategoryId(id)
                 .stream().map(this::convert)
                 .collect(Collectors.toList());
@@ -74,6 +75,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDetailResponse getProductDTOByID(int id) {
         return null;
+    }
+
+    @Override
+    public void insert(AddProductRequest productDTO) {
+
     }
 
     private ProductResponse convert(@NotNull Product product) {

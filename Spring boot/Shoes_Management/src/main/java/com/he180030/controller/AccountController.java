@@ -31,7 +31,8 @@ public class AccountController {
     }
 
     @PatchMapping("/edit_profile")
-    public ResponseEntity<?> editProfile(@RequestBody UpdateAccountRequest request) {
+    public ResponseEntity<?> editProfile(
+            @RequestBody UpdateAccountRequest request) {
         logger.info("editProfile");
         aSrv.updateProfile(request);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -42,7 +43,9 @@ public class AccountController {
     }
 
     @PostMapping("/add_account")
-    public ResponseEntity<?> addAccount(@RequestBody CreateAccountRequest account) {
+    public ResponseEntity<?> addAccount(
+            @RequestBody CreateAccountRequest account) {
+        logger.info("addAccount");
         String rawPassword = account.getPassword();
         String encryptedPassword = encoder.encode(rawPassword);
         String message;
@@ -67,6 +70,18 @@ public class AccountController {
         logger.info("manageAccount");
         Page<AccountResponse> accounts = aSrv.getAllPaginatedAccountDTOs(page - 1, 6);
         return renderData(assembler, accounts);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteAccount(
+            @RequestBody int id) {
+        logger.info("deleteAccount");
+        aSrv.deleteAccountDTOByID(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message("Account deleted successfully")
+        );
     }
 
     @NotNull

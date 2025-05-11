@@ -13,4 +13,6 @@ public interface AccountService {
     void insertAccountDTO(CreateAccountRequest accountDTO);
 
     Page<AccountResponse> getAllPaginatedAccountDTOs(int page, int size);
+
+    void deleteAccountDTOByID(int id);
 }

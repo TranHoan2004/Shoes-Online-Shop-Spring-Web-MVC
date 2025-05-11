@@ -1,6 +1,6 @@
 package com.HE180030.service;
 
-import com.HE180030.dto.ProductDTO;
+import com.HE180030.dto.request.AddProductRequest;
 import com.HE180030.dto.response.ProductDetailResponse;
 import com.HE180030.dto.response.ProductResponse;
 import org.springframework.data.domain.Page;
@@ -12,7 +12,7 @@ public interface ProductService {
 
     ProductResponse getLastProduct();
 
-    List<ProductResponse> getById(int id);
+    List<ProductResponse> getByCategoryId(int id);
 
     List<ProductResponse> searchProductDTOsByName(String text);
 
@@ -21,4 +21,12 @@ public interface ProductService {
     void deleteProductDTOByID(int id);
 
     ProductDetailResponse getProductDTOByID(int id);
+
+    void insert(AddProductRequest productDTO);
+
+    void deleteProductBySellID(int id);
+
+    void delete(int id);
+
+    ProductResponse getById(int id);
 }

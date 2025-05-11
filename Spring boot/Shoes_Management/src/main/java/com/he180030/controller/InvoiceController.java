@@ -10,6 +10,8 @@ import com.HE180030.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ public class InvoiceController {
     CartService cSrv;
     ProductService pSrv;
     HttpSession session;
+    Logger logger = LoggerFactory.getLogger(InvoiceController.class);
 
     public InvoiceController(InvoiceService invoiceService, CartService cSrv, ProductService pSrv, HttpSession session) {
         this.iSrv = invoiceService;
@@ -34,7 +37,9 @@ public class InvoiceController {
     }
 
     @PostMapping("/add_order")
-    public ResponseEntity<?> addOrder(@RequestBody CreateInvoiceRequest invoiceDTO) {
+    public ResponseEntity<?> addOrder(
+            @RequestBody CreateInvoiceRequest invoiceDTO) {
+        logger.info("Add Order");
         StringBuilder context = new StringBuilder();
         AtomicReference<Double> totalMoney = new AtomicReference<>((double) 0);
         cSrv.getCartDTOByAccountID(getAccountID()).forEach(cartDTO ->
@@ -58,6 +63,19 @@ public class InvoiceController {
                                 "total money", totalMoney,
                                 "total money VAT", totalMoneyVAT
                         ))
+        );
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteInvoice(
+            @RequestBody int id) {
+        logger.info("Delete invoice with id {}", id);
+        iSrv.deleteInvoiceByAccountId(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message("Delete successfully")
+                        .build()
         );
     }
 

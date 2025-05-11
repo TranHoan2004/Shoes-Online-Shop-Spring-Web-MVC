@@ -1,23 +1,21 @@
 package com.HE180030.controller;
 
-import com.HE180030.dto.AccountDTO;
-import com.HE180030.dto.CategoryDTO;
-import com.HE180030.dto.ProductDTO;
+import com.HE180030.dto.request.AddProductRequest;
+import com.HE180030.dto.request.DeleteRequest;
+import com.HE180030.dto.request.ProductRequest;
 import com.HE180030.dto.response.ApiResponse;
+import com.HE180030.dto.response.CategoryResponse;
 import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,17 +28,11 @@ import java.util.logging.Logger;
 public class ProductController {
     ProductService pSrv;
     CategoryService cateSrv;
-    CartService cSrv;
-    ReviewService rSrv;
-    QuantitiesSoldService qSrv;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ProductController(ProductService pSrv, CategoryService cateSrv, CartService cSrv, ReviewService rSrv, QuantitiesSoldService qSrv) {
+    public ProductController(ProductService pSrv, CategoryService cateSrv) {
         this.pSrv = pSrv;
         this.cateSrv = cateSrv;
-        this.cSrv = cSrv;
-        this.rSrv = rSrv;
-        this.qSrv = qSrv;
     }
 
     /*Tested*/
@@ -73,7 +65,7 @@ public class ProductController {
 
     @GetMapping("/list")
     public ResponseEntity<?> displayAllProducts(
-            @RequestParam(value = "page", defaultValue = "1") int page) {
+            @RequestParam(defaultValue = "1") int page) {
         logger.info("displayAllProducts");
         Page<ProductResponse> productResponsePage = pSrv.getAllPaginatedProductDTO(page - 1, 9);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -86,7 +78,8 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchProducts(@RequestBody String text) {
+    public ResponseEntity<?> searchProducts(
+            @RequestParam("key") String text) {
         List<ProductResponse> list = pSrv.searchProductDTOsByName(text);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
@@ -100,9 +93,9 @@ public class ProductController {
 
     @GetMapping("/filter")
     public ResponseEntity<?> filterByCategoryId(
-            @RequestParam int categoryId) {
+            @RequestParam("id") int categoryId) {
         logger.info("Filter category by ID");
-        List<ProductResponse> list = pSrv.getById(categoryId);
+        List<ProductResponse> list = pSrv.getByCategoryId(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
@@ -118,20 +111,29 @@ public class ProductController {
 
     // khong can /managerProduct
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteProduct(@RequestBody int id) {
-        cSrv.deleteCartDTOByProductID(id);
-        rSrv.deleteReviewDTOByProductID(id);
-        qSrv.deleteQuantitiesSoldDTOByProductID(id);
-        pSrv.deleteProductDTOByID(id);
+    public ResponseEntity<?> deleteProduct(
+            @RequestBody DeleteRequest request) {
+        logger.info("delete");
+        switch (request.getCode()) {
+            case 100 -> {
+                logger.info("Delete product by id");
+                pSrv.deleteProductDTOByID(request.getId());
+            }
+            case 101 -> {
+                logger.info("Delete product");
+                pSrv.delete(request.getId());
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
-                        .message("Cart, review, quantities sold, product successfully deleted")
+                        .message("Product are successfully deleted")
         );
     }
 
     @GetMapping("/load")
-    public ResponseEntity<?> loadProduct(@ModelAttribute("id") int id, Model model) {
+    public ResponseEntity<?> loadProduct(
+            @RequestParam int id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
@@ -140,13 +142,61 @@ public class ProductController {
         );
     }
 
-    private boolean isForbiddenContent(@NotNull HttpServletRequest request, String key) {
+    @GetMapping("/add")
+    public ResponseEntity<?> addProduct(
+            @RequestBody ProductRequest request) {
+        logger.info("addProduct");
+        List<CategoryResponse> categories = cateSrv.getAllCategories();
+        String customCategory = request.getCustomCategory();
+        int category = 0;
+        if (customCategory != null && cateSrv.getCategoryDTOByName(customCategory) == null) {
+            cateSrv.insertCategoryDTO(categories.size() + 1, customCategory.toUpperCase());
+            category = categories.size() + 1;
+        }
+        pSrv.insert(AddProductRequest.builder()
+                .name(request.getName())
+                .image(request.getImage())
+                .price(request.getPrice())
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .category(category)
+                .model(request.getModel())
+                .color(request.getColor())
+                .delivery(request.getDelivery())
+                .image2(request.getImage2())
+                .image3(request.getImage3())
+                .image4(request.getImage4())
+                .build());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message("Product Added!")
+        );
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> getProduct(
+            @RequestBody int id) {
+        logger.info("getProduct");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(pSrv.getById(id))
+        );
+    }
+
+    private boolean isForbiddenContent(
+            @NotNull HttpServletRequest request,
+            String key) {
         String requestedBy = request.getHeader("X-Requested-By");
         return requestedBy == null || !requestedBy.equals(key);
     }
 
     @NotNull
-    private ResponseEntity<?> renderData(@NotNull PagedResourcesAssembler<ProductResponse> assembler, Page<ProductResponse> postDTOs) {
+    private ResponseEntity<?> renderData(
+            @NotNull PagedResourcesAssembler<ProductResponse> assembler,
+            Page<ProductResponse> postDTOs) {
         return ResponseEntity.ok(ApiResponse.builder()
                 .data(assembler.toModel(postDTOs))
                 .code(HttpStatus.OK.value())

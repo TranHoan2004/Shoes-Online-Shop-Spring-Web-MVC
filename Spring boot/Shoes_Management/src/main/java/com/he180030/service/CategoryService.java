@@ -6,4 +6,10 @@ import java.util.List;
 
 public interface CategoryService {
     List<CategoryResponse> getAllCategories();
+
+    CategoryResponse getCategoryDTOByName(String name);
+
+    void insertCategoryDTO(int categoryId, String name);
+
+    String getNameByID(int id);
 }
