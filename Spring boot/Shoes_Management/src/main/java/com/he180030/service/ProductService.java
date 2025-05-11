@@ -1,6 +1,7 @@
 package com.HE180030.service;
 
 import com.HE180030.dto.request.AddProductRequest;
+import com.HE180030.dto.request.ProductRequest;
 import com.HE180030.dto.response.ProductDetailResponse;
 import com.HE180030.dto.response.ProductResponse;
 import org.springframework.data.domain.Page;
@@ -29,4 +30,6 @@ public interface ProductService {
     void delete(int id);
 
     ProductResponse getById(int id);
+
+    void editProduct(ProductRequest request);
 }

@@ -4,15 +4,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateAccountRequest {
-    String username;
-    String password;
-    String email;
+public class DeleteRequest {
+    int code;
     int id;
-    boolean isAdmin;
-    boolean isSell;
 }

@@ -2,6 +2,7 @@ package com.HE180030.security.utils;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,12 +13,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SecurityUtils {
-    public static @Nullable Integer getCurrentUserID() {
+    public static @NotNull Integer getCurrentUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof UserDetails) {
             return ((CustomUserDetails) auth.getPrincipal()).getId();
         }
-        return null;
+        throw new RuntimeException("No authentication found");
     }
 }
 

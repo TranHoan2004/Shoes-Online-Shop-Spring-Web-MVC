@@ -1,9 +1,10 @@
 package com.HE180030.controller;
 
-import com.HE180030.dto.AccountDTO;
 import com.HE180030.dto.request.CreateInvoiceRequest;
 import com.HE180030.dto.response.ApiResponse;
+import com.HE180030.dto.response.InvoiceResponse;
 import com.HE180030.dto.response.ProductResponse;
+import com.HE180030.security.utils.SecurityUtils;
 import com.HE180030.service.CartService;
 import com.HE180030.service.InvoiceService;
 import com.HE180030.service.ProductService;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -36,13 +38,26 @@ public class InvoiceController {
         this.session = session;
     }
 
+    @GetMapping("")
+    public ResponseEntity<?> getAllById() {
+        logger.info("getAllById");
+        List<InvoiceResponse> list = iSrv.getAllInvoiceByID(SecurityUtils.getCurrentUserID());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(list)
+                        .dataSize(list.size())
+        );
+    }
+
     @PostMapping("/add_order")
     public ResponseEntity<?> addOrder(
             @RequestBody CreateInvoiceRequest invoiceDTO) {
         logger.info("Add Order");
         StringBuilder context = new StringBuilder();
         AtomicReference<Double> totalMoney = new AtomicReference<>((double) 0);
-        cSrv.getCartDTOByAccountID(getAccountID()).forEach(cartDTO ->
+        cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID()).forEach(cartDTO ->
                 pSrv.getAllProducts().forEach((ProductResponse productDTO) -> {
                     if (cartDTO.getProductId() == productDTO.getId()) {
                         totalMoney.updateAndGet(v -> (v + (productDTO.getPrice() * cartDTO.getAmount())));
@@ -53,7 +68,7 @@ public class InvoiceController {
                                 .append(" // ");
                     }
                 }));
-        iSrv.insertInvoiceDTO(getAccountID(), invoiceDTO, context.toString());
+        iSrv.insertInvoiceDTO(SecurityUtils.getCurrentUserID(), invoiceDTO, context.toString());
         double totalMoneyVAT = Math.round(totalMoney.get() * 1.1);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.builder()
@@ -77,10 +92,5 @@ public class InvoiceController {
                         .message("Delete successfully")
                         .build()
         );
-    }
-
-    private int getAccountID() {
-        AccountDTO account = (AccountDTO) session.getAttribute("account");
-        return account.getId();
     }
 }

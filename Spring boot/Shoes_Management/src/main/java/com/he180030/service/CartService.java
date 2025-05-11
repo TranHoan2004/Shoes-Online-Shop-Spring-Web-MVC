@@ -11,13 +11,13 @@ public interface CartService {
 
     void createAmountAndSize(int accountID, int productID, int amount, int size);
 
-    void editAmountAndSize(int accountID, int productID, int amount, int size);
-
-    void editAmount(int accountID, int productID, int amount);
-
     void create(int accountID, int productID, int amount, int size);
 
     void updateAmountCartDTO(int accountID, int productID, int amount);
 
-    void deleteCartDTOByProductID(int productID);
+    void deleteCart(int productID);
+
+    void deleteCartByProductID(int productID);
+
+    void deleteCartDTOByAccountID(int id);
 }

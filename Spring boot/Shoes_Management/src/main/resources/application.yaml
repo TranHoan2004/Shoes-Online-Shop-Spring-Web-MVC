@@ -32,6 +32,6 @@ spring:
   security:
     user:
       name: user
-      password: 123
+      password: $2a$10$x/uOvNKEQSr0tDNQF2TV9uSDbYOiHzh.Hx2dVaCq5b4ps3Auo9fte
   config:
     import: "optional:file:.env[.properties]"

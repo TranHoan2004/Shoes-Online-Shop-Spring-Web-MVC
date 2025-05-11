@@ -109,7 +109,6 @@ public class ProductController {
         );
     }
 
-    // khong can /managerProduct
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteProduct(
             @RequestBody DeleteRequest request) {
@@ -122,6 +121,10 @@ public class ProductController {
             case 101 -> {
                 logger.info("Delete product");
                 pSrv.delete(request.getId());
+            }
+            case 102 -> {
+                logger.info("Delete product by sell id");
+                pSrv.deleteProductBySellID(request.getId());
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -183,6 +186,24 @@ public class ProductController {
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(pSrv.getById(id))
+        );
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<?> editProduct(
+            @RequestBody ProductRequest request) {
+        logger.info("editProduct");
+        List<CategoryResponse> list = cateSrv.getAllCategories();
+        if (!request.getCustomCategory().isEmpty() &&
+                cateSrv.getCategoryDTOByName(request.getCustomCategory().toUpperCase()) == null) {
+            cateSrv.insertCategoryDTO(list.size() + 1, request.getCustomCategory().toUpperCase());
+            request.setCategory(list.size() + 1);
+        }
+        pSrv.editProduct(request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message("Product edited successfully")
         );
     }
 

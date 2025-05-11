@@ -1,10 +1,11 @@
 package com.HE180030.controller;
 
-import com.HE180030.dto.AccountDTO;
 import com.HE180030.dto.CartStatus;
+import com.HE180030.dto.request.DeleteRequest;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.dto.response.CartResponse;
 import com.HE180030.dto.response.ProductResponse;
+import com.HE180030.security.utils.SecurityUtils;
 import com.HE180030.service.CartService;
 import com.HE180030.service.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -12,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,32 +29,42 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CartController {
     ProductService pSrv;
     CartService cSrv;
+    Logger logger = LoggerFactory.getLogger(CartController.class);
 
     public CartController(CartService cartService, ProductService pSrv) {
         this.cSrv = cartService;
         this.pSrv = pSrv;
     }
 
-    @GetMapping("/manage_cart")
-    public ResponseEntity<?> manageCart(HttpSession session) {
+    @GetMapping("/c")
+    public ResponseEntity<?> getCartByUser() {
+        logger.info("getCartByUser");
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
-                        .data(displayContent(session, 0.1))
+                        .data(cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID()))
+        );
+    }
+
+    @GetMapping("/manage")
+    public ResponseEntity<?> manageCart() {
+        logger.info("manageCart");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(displayContent(0.1))
         );
     }
 
     /*Tested*/
     @GetMapping("/amount")
-    public ResponseEntity<?> loadAmountCart(HttpSession session) {
-        int totalAmountCart = 0;
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
-        if (accountDTO != null) {
-            int accountID = accountDTO.getId();
-            List<CartResponse> list = cSrv.getCartDTOByAccountID(accountID);
-            totalAmountCart = list.size();
-        }
+    public ResponseEntity<?> loadAmountCart() {
+        logger.info("loadAmountCart");
+        int accountID = SecurityUtils.getCurrentUserID();
+        List<CartResponse> list = cSrv.getCartDTOByAccountID(accountID);
+        int totalAmountCart = list.size();
         return ResponseEntity.ok(ApiResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message("Total amount of cart is: " + totalAmountCart)
@@ -61,18 +74,11 @@ public class CartController {
     }
 
     @PostMapping("/add_to_cart")
-    public ResponseEntity<?> addToCart(HttpSession session,
-                                       @RequestBody int productID,
-                                       @RequestBody int size) {
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
-        if (accountDTO == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    ApiResponse.builder()
-                            .code(HttpStatus.UNAUTHORIZED.value())
-                            .message("session null, cannot add to cart")
-            );
-        }
-        int accountID = accountDTO.getId();
+    public ResponseEntity<?> addToCart(
+            @RequestBody int productID,
+            @RequestBody int size) {
+        logger.info("addToCart");
+        int accountID = SecurityUtils.getCurrentUserID();
         String message;
 
         CartResponse existedCart = cSrv.getCartDTOByAccountIDAndProductID(accountID, productID, size);
@@ -98,32 +104,26 @@ public class CartController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getCart(HttpSession session) {
+    public ResponseEntity<?> getCart() {
+        logger.info("getCart");
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(Map.of(
-                                "content", displayContent(session, 1.1),
+                                "content", displayContent(1.1),
                                 "status", CartStatus.class.getEnumConstants()
                         ))
         );
     }
 
     @PatchMapping("/change_amount")
-    public ResponseEntity<?> changeAmountCart(HttpSession session,
-                                              @RequestBody int productID,
-                                              @RequestBody int amount,
-                                              @RequestBody CartStatus status) {
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
-        if (accountDTO == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    ApiResponse.builder()
-                            .code(HttpStatus.UNAUTHORIZED.value())
-                            .message("session null, cannot add to cart")
-            );
-        }
-        int accountID = accountDTO.getId();
+    public ResponseEntity<?> changeAmountCart(
+            @RequestBody int productID,
+            @RequestBody int amount,
+            @RequestBody CartStatus status) {
+        logger.info("changeAmountCart");
+        int accountID = SecurityUtils.getCurrentUserID();
         String message = "";
         if (status == CartStatus.Add) {
             amount++;
@@ -140,9 +140,24 @@ public class CartController {
         );
     }
 
-    @DeleteMapping("/delete_cart")
-    public ResponseEntity<?> deleteCart(@RequestBody int id) {
-        cSrv.deleteCartDTOByProductID(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCartByAccount(
+            @RequestBody DeleteRequest request) {
+        logger.info("delete");
+        switch (request.getCode()) {
+            case 100 -> {
+                logger.info("delete cart by account");
+                cSrv.deleteCartDTOByAccountID(SecurityUtils.getCurrentUserID());
+            }
+            case 101 -> {
+                logger.info("delete cart by product");
+                cSrv.deleteCartByProductID(request.getId());
+            }
+            case 102 -> {
+                logger.info("delete cart");
+                cSrv.deleteCart(request.getId());
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
@@ -150,10 +165,10 @@ public class CartController {
         );
     }
 
-    @GetMapping("/total_money_cart")
-    public ResponseEntity<?> totalMoneyCart(HttpSession session) {
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
-        List<CartResponse> carts = cSrv.getCartDTOByAccountID(accountDTO.getId());
+    @GetMapping("/total_money")
+    public ResponseEntity<?> totalMoneyCart() {
+        logger.info("totalMoneyCart");
+        List<CartResponse> carts = cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID());
         List<ProductResponse> products = pSrv.getAllProducts();
         double totalMoney = 0;
         for (CartResponse c : carts) {
@@ -180,10 +195,9 @@ public class CartController {
         );
     }
 
-    private @NotNull @Unmodifiable Map<String, Object> displayContent(@NotNull HttpSession session, double number) {
-        AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
+    private @NotNull @Unmodifiable Map<String, Object> displayContent(double number) {
         AtomicReference<Double> totalMoney = new AtomicReference<>((double) 0);
-        List<CartResponse> carts = cSrv.getCartDTOByAccountID(accountDTO.getId());
+        List<CartResponse> carts = cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID());
         List<ProductResponse> products = pSrv.getAllProducts();
         carts.forEach(cartDTO -> products.forEach(productDTO -> {
             if (cartDTO.getProductId() == productDTO.getId()) {

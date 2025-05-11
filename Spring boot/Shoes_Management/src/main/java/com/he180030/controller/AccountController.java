@@ -4,6 +4,7 @@ import com.HE180030.dto.request.CreateAccountRequest;
 import com.HE180030.dto.request.UpdateAccountRequest;
 import com.HE180030.dto.response.AccountResponse;
 import com.HE180030.dto.response.ApiResponse;
+import com.HE180030.security.utils.SecurityUtils;
 import com.HE180030.service.AccountService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -42,7 +43,7 @@ public class AccountController {
         );
     }
 
-    @PostMapping("/add_account")
+    @PostMapping("/add")
     public ResponseEntity<?> addAccount(
             @RequestBody CreateAccountRequest account) {
         logger.info("addAccount");
@@ -63,7 +64,7 @@ public class AccountController {
         );
     }
 
-    @GetMapping("/manage_account")
+    @GetMapping("/manage")
     public ResponseEntity<?> manageAccount(
             @RequestParam(value = "page", defaultValue = "1") int page,
             PagedResourcesAssembler<AccountResponse> assembler) {
@@ -73,14 +74,24 @@ public class AccountController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteAccount(
-            @RequestBody int id) {
+    public ResponseEntity<?> deleteAccount() {
         logger.info("deleteAccount");
-        aSrv.deleteAccountDTOByID(id);
+        aSrv.deleteAccountDTOByID(SecurityUtils.getCurrentUserID());
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message("Account deleted successfully")
+        );
+    }
+
+    @GetMapping("/load")
+    public ResponseEntity<?> getAccount() {
+        logger.info("load");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(aSrv.getAccountDTOByID(SecurityUtils.getCurrentUserID()))
         );
     }
 

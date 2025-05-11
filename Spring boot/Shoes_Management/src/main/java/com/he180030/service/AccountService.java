@@ -15,4 +15,6 @@ public interface AccountService {
     Page<AccountResponse> getAllPaginatedAccountDTOs(int page, int size);
 
     void deleteAccountDTOByID(int id);
+
+    AccountResponse getAccountDTOByID(int id);
 }
