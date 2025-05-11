@@ -41,7 +41,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateProfile(AccountDTO accountDTO) {
         Account account = convert(accountDTO);
-        accountRepository.updateProfile(account.getUsername(), account.getPassword(), account.getEmail(), account.getId());
+        accountRepository.updateProfile(account.getUsername(),
+                account.getPassword(),
+                account.getEmail(),
+                account.getId());
     }
 
     @Override

@@ -109,7 +109,6 @@ public class CartController {
     @GetMapping("/changeAmount")
     public String changeAmountCart(Model model, HttpSession session,
                                    @ModelAttribute("productID") int productID,
-                                   @ModelAttribute("cartID") int cartID,
                                    @ModelAttribute("amount") int amount,
                                    @ModelAttribute("status") CartStatus status) {
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
@@ -140,7 +139,7 @@ public class CartController {
         return null;
     }
 
-    private void displayContent(@NotNull HttpSession session, Model model, double number) {
+    private void displayContent(@NotNull HttpSession session, @NotNull Model model, double number) {
         AccountDTO accountDTO = (AccountDTO) session.getAttribute("account");
         AtomicReference<Double> totalMoney = new AtomicReference<>((double) 0);
         List<CartDTO> carts = manager.getCartDTOs(accountDTO.getId());

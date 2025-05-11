@@ -22,8 +22,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             LIMIT 1
             """)
     Product findLastProduct();
-//
-//    List<Product> searchByName(String txt);
+
+    @Query("""
+            FROM Product p
+            WHERE p.name LIKE :text
+            ORDER BY p.id DESC
+            """)
+    List<Product> searchByName(@Param("text") String txt);
 //
 //    Product getByID(int id);
 //

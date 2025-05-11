@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -30,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponse> getAllProductDTO(int page, int size) {
+    public Page<ProductResponse> getAllPaginatedProductDTO(int page, int size) {
         logger.info("getAllProductDTO");
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = repo.findAll(pageable);
@@ -40,21 +41,38 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getLastProduct() {
-        return convertToResponse(repo.findLastProduct());
+        return convert(repo.findLastProduct());
     }
 
     @Override
-    public List<Product> getById(int id) {
-        return repo.findByCategoryId(id);
+    public List<ProductResponse> getById(int id) {
+        return repo.findByCategoryId(id)
+                .stream().map(this::convert)
+                .collect(Collectors.toList());
     }
 
-    private ProductResponse convertToResponse(@NotNull Product product) {
+    @Override
+    public List<ProductResponse> searchProductDTOsByName(String text) {
+        return repo.searchByName("%" + text + "%")
+                .stream().map(this::convert)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponse> getAllProducts() {
+        return repo.findAll()
+                .stream().map(this::convert)
+                .collect(Collectors.toList());
+    }
+
+    private ProductResponse convert(@NotNull Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .image(product.getImage())
                 .price(product.getPrice())
                 .title(product.getTitle())
+                .color(product.getColor())
                 .build();
     }
 
@@ -65,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         }
         List<Product> postDTOs = products.getContent();
         List<ProductResponse> postDTOList = new ArrayList<>();
-        postDTOs.forEach(p -> postDTOList.add(convertToResponse(p)));
+        postDTOs.forEach(p -> postDTOList.add(convert(p)));
         return new PageImpl<>(postDTOList, pageable, count);
     }
 }

@@ -14,4 +14,5 @@ public class ProductResponse {
     String name;
     String title;
     double price;
+    String color;
 }

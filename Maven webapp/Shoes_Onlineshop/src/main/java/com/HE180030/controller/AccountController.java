@@ -18,15 +18,15 @@ import java.util.List;
 
 @Controller
 public class AccountController {
-    private final AccountService accountService;
+    private final AccountService aSrv;
 
     public AccountController(AccountService accountService) {
-        this.accountService = accountService;
+        this.aSrv = accountService;
     }
 
     @GetMapping("/managerAccount")
     public String manageAccount(Model model, @RequestParam("page") String page) {
-        List<AccountDTO> accounts = accountService.getAllAccountDTOs();
+        List<AccountDTO> accounts = aSrv.getAllAccountDTOs();
         displayProductByPage(model, accounts, page);
         return "manager-account";
     }
@@ -62,7 +62,7 @@ public class AccountController {
 
     @PostMapping("/editProfile")
     public String editProfile(Model model, @ModelAttribute AccountDTO accountDTO) {
-        accountService.updateProfile(accountDTO);
+        aSrv.updateProfile(accountDTO);
         model.addAttribute("message", "Update profile successfully");
         model.addAttribute("error", null);
         return "edit-profile";
@@ -72,7 +72,7 @@ public class AccountController {
     public String login(@ModelAttribute("user") AccountDTO accountDTO, HttpServletRequest request, Model model, HttpSession session) {
         String encryptedPassword = EncodingPassword.getEncryptedPassword(accountDTO.getPassword());
         String username = accountDTO.getUsername();
-        AccountDTO acc = accountService.login(accountDTO);
+        AccountDTO acc = aSrv.login(accountDTO);
         if (acc != null) {
             model.addAttribute("error", "Wrong username or password");
             return "login";
@@ -90,8 +90,8 @@ public class AccountController {
         String rawPassword = accountDTO.getPassword();
         String encryptedPassword = EncodingPassword.getEncryptedPassword(rawPassword);
         accountDTO.setPassword(encryptedPassword);
-        if (accountService.getAccountDTOByName(accountDTO.getUsername()) == null) {
-            accountService.insertAccountDTO(accountDTO);
+        if (aSrv.getAccountDTOByName(accountDTO.getUsername()) == null) {
+            aSrv.insertAccountDTO(accountDTO);
         } else {
             model.addAttribute("mess", "User is existing!");
         }
@@ -110,7 +110,7 @@ public class AccountController {
         }
         int start = (page - 1) * numberpage;
         int end = Math.min(page * numberpage, size);
-        List<AccountDTO> listByPage = accountService.getListAccountDTOsByPage(list, start, end);
+        List<AccountDTO> listByPage = aSrv.getListAccountDTOsByPage(list, start, end);
         model.addAttribute("list", listByPage);
         model.addAttribute("num", num);
         model.addAttribute("page", page);
