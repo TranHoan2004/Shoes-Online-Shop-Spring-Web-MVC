@@ -1,5 +1,6 @@
 package com.HE180030.service.impl;
 
+import com.HE180030.dto.response.ProductDetailResponse;
 import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
@@ -63,6 +64,16 @@ public class ProductServiceImpl implements ProductService {
         return repo.findAll()
                 .stream().map(this::convert)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteProductDTOByID(int id) {
+
+    }
+
+    @Override
+    public ProductDetailResponse getProductDTOByID(int id) {
+        return null;
     }
 
     private ProductResponse convert(@NotNull Product product) {

@@ -1,10 +1,14 @@
 package com.HE180030.service.impl;
 
 import com.HE180030.dto.AccountDTO;
+import com.HE180030.dto.request.CreateAccountRequest;
+import com.HE180030.dto.request.UpdateAccountRequest;
+import com.HE180030.dto.response.AccountResponse;
 import com.HE180030.model.Account;
 import com.HE180030.repository.AccountRepository;
 import com.HE180030.service.AccountService;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,5 +42,25 @@ public class AccountServiceImpl implements AccountService {
                 .password(account.getPassword())
                 .username(account.getUsername())
                 .build();
+    }
+
+    @Override
+    public void updateProfile(UpdateAccountRequest request) {
+
+    }
+
+    @Override
+    public boolean isThisUsernameExisted(String username) {
+        return false;
+    }
+
+    @Override
+    public void insertAccountDTO(CreateAccountRequest accountDTO) {
+
+    }
+
+    @Override
+    public Page<AccountResponse> getAllPaginatedAccountDTOs(int page, int size) {
+        return null;
     }
 }

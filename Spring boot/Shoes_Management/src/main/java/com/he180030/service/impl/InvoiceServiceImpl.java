@@ -1,6 +1,7 @@
 package com.HE180030.service.impl;
 
 import com.HE180030.dto.InvoiceDTO;
+import com.HE180030.dto.request.CreateInvoiceRequest;
 import com.HE180030.repository.InvoiceRepository;
 import com.HE180030.service.InvoiceService;
 import org.springframework.stereotype.Service;
@@ -13,5 +14,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository) {
         this.invoiceRepository = invoiceRepository;
+    }
+
+    @Override
+    public void insertInvoiceDTO(int accountID, CreateInvoiceRequest request, String context) {
+
     }
 }
