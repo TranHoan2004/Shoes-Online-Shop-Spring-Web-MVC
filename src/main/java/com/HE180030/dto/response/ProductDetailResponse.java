@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDetailResponse {
-    int id;
+    String id;
     String name;
     String image;
     String image2;
@@ -20,5 +20,5 @@ public class ProductDetailResponse {
     String color;
     String delivery;
     String description;
-    int categoryId;
+    String categoryId;
 }

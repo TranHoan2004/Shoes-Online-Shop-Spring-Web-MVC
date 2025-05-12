@@ -4,18 +4,21 @@ import com.HE180030.dto.response.CategoryResponse;
 import com.HE180030.model.Category;
 import com.HE180030.repository.CategoryRepository;
 import com.HE180030.service.CategoryService;
+import com.HE180030.utils.UrlIdEncoder;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryServiceImpl implements CategoryService {
     CategoryRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.repo = categoryRepository;
@@ -40,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryResponse convert(@NotNull Category category) {
         return CategoryResponse.builder()
-                .id(category.getId())
+                .id(UrlIdEncoder.encodeId(category.getId()))
                 .name(category.getName())
                 .build();
     }

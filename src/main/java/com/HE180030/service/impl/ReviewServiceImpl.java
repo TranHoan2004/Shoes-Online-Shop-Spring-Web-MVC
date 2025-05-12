@@ -6,10 +6,13 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ReviewServiceImpl(ReviewRepository reviewRepository) {
         this.repo = reviewRepository;

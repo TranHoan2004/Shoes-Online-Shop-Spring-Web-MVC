@@ -10,8 +10,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartResponse {
-    int id;
+    String id;
     int amount;
     String size;
-    int productId;
+    String productId;
 }

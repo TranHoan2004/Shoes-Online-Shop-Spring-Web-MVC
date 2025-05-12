@@ -4,18 +4,21 @@ import com.HE180030.dto.response.CartResponse;
 import com.HE180030.model.Cart;
 import com.HE180030.repository.CartRepository;
 import com.HE180030.service.CartService;
+import com.HE180030.utils.UrlIdEncoder;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartServiceImpl implements CartService {
     CartRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public CartServiceImpl(CartRepository cartRepository) {
         this.repo = cartRepository;
@@ -67,7 +70,7 @@ public class CartServiceImpl implements CartService {
         return CartResponse.builder()
                 .amount(cart.getAmount())
                 .size(cart.getSize())
-                .id(cart.getId())
+                .id(UrlIdEncoder.encodeId(cart.getId()))
                 .build();
     }
 }

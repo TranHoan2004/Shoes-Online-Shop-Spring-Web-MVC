@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceResponse {
-    int id;
+    String id;
     String context;
     String phone;
     String delivery;

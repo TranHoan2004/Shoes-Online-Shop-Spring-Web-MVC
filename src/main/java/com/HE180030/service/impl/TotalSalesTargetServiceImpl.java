@@ -6,10 +6,13 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TotalSalesTargetServiceImpl implements TotalSalesTargetService {
     TotalSalesTargetRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public TotalSalesTargetServiceImpl(TotalSalesTargetRepository repository) {
         this.repo = repository;

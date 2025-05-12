@@ -12,10 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountServiceImpl implements AccountService {
     AccountRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.repo = accountRepository;

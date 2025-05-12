@@ -9,11 +9,13 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class InvoiceServiceImpl implements InvoiceService {
     InvoiceRepository repo;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository) {
         this.repo = invoiceRepository;

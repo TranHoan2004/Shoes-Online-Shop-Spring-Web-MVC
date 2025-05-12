@@ -7,6 +7,7 @@ import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.model.Product;
 import com.HE180030.repository.ProductRepository;
 import com.HE180030.service.ProductService;
+import com.HE180030.utils.UrlIdEncoder;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -105,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductResponse convert(@NotNull Product product) {
         return ProductResponse.builder()
-                .id(product.getId())
+                .id(UrlIdEncoder.encodeId(product.getId()))
                 .name(product.getName())
                 .image(product.getImage())
                 .price(product.getPrice())
