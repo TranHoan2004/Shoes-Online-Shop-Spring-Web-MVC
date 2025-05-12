@@ -35,3 +35,7 @@ spring:
       password: $2a$10$x/uOvNKEQSr0tDNQF2TV9uSDbYOiHzh.Hx2dVaCq5b4ps3Auo9fte
   config:
     import: "optional:file:.env[.properties]"
+
+  app:
+    jwtExpirationMs: 3600000
+    signerKey: 6SjMf1ukIpm75rRJgzNsbo7n2LqJWgKe+SwPqchr+IG2dLkqqY74TF1LSiOXRRdn
