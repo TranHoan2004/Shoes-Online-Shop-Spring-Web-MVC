@@ -21,4 +21,6 @@ public interface AccountService {
     AccountResponse getAccountByEmail(String email);
 
     Integer getIDByEmail(String email);
+
+    void updatePassword(String email, String password);
 }

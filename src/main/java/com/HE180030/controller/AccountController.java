@@ -2,6 +2,7 @@ package com.HE180030.controller;
 
 import com.HE180030.dto.request.*;
 import com.HE180030.dto.response.*;
+import com.HE180030.model.Account;
 import com.HE180030.security.jwt.*;
 import com.HE180030.security.utils.SecurityUtils;
 import com.HE180030.service.*;
@@ -9,6 +10,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.*;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Random;
 
 @RestController
 @RequestMapping("/account")
@@ -34,6 +38,8 @@ public class AccountController {
     PasswordEncoder encoder;
     JWTService jwtService;
     AuthenticationManager authenticationManager;
+    @NonFinal
+    static String code;
     Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     /**
@@ -60,7 +66,7 @@ public class AccountController {
      * </pre>
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception {
+    public ResponseEntity<?> login(@RequestBody UsernameAndPasswordRequest request) throws Exception {
         Authentication manager = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
@@ -263,6 +269,54 @@ public class AccountController {
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(aSrv.getAccountByEmail(SecurityUtils.getCurrentUser().getUsername()))
                         .build()
+        );
+    }
+
+    // tested
+    @GetMapping("/verify_email")
+    public ResponseEntity<?> sendVerifyCode(@RequestParam String email) {
+        if (aSrv.isThisEmailExisted(email)) {
+            Random random = new Random();
+            code = String.valueOf(100000 + random.nextInt(900000));
+            return returnResponseData(
+                    code,
+                    HttpStatus.OK.value(),
+                    HttpStatus.OK.getReasonPhrase()
+            );
+        }
+        return returnResponseData(
+                null,
+                HttpStatus.BAD_REQUEST.value(),
+                "This email does not exist"
+        );
+    }
+
+    // tested
+    @GetMapping("/code")
+    public ResponseEntity<?> verifyCode(@RequestParam String verifyCode) {
+        if (code.equals(verifyCode)) {
+            return returnResponseData(
+                    null,
+                    HttpStatus.OK.value(),
+                    HttpStatus.OK.getReasonPhrase()
+            );
+        }
+        return returnResponseData(
+                null,
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid code"
+        );
+    }
+
+    // tested
+    @PatchMapping("/reset")
+    public ResponseEntity<?> updatePassword(@RequestBody UsernameAndPasswordRequest request) {
+        logger.info("updatePassword");
+        aSrv.updatePassword(request.getUsername(), encoder.encode(request.getPassword()));
+        return returnResponseData(
+                null,
+                HttpStatus.OK.value(),
+                HttpStatus.OK.getReasonPhrase()
         );
     }
 

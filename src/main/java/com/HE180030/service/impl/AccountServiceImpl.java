@@ -107,4 +107,12 @@ public class AccountServiceImpl implements AccountService {
         }
         return account.getId();
     }
+
+    @Override
+    public void updatePassword(String email, String password) {
+        logger.info("Updating password");
+        Account account = repo.findAccountByEmail(email);
+        account.setPassword(password);
+        repo.save(account);
+    }
 }
