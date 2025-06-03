@@ -37,7 +37,7 @@ public class Invoice {
     @Transient
     String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     Account account;
 }

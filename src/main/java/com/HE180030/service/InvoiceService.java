@@ -6,9 +6,9 @@ import com.HE180030.dto.response.InvoiceResponse;
 import java.util.List;
 
 public interface InvoiceService {
-    void insertInvoiceDTO(int accountID, CreateInvoiceRequest request, String context);
+    void insertInvoice(int accountID, CreateInvoiceRequest request, String context);
 
-    void deleteInvoiceByAccountId(int id);
+    void deleteInvoiceByAccountID(int id);
 
-    List<InvoiceResponse> getAllInvoiceByID(int id);
+    List<InvoiceResponse> getAllInvoicesByID(int id);
 }

@@ -8,13 +8,17 @@ import org.springframework.data.domain.Page;
 public interface AccountService {
     void updateProfile(UpdateAccountRequest request);
 
-    boolean isThisUsernameExisted(String username);
+    boolean isThisEmailExisted(String email);
 
-    void insertAccountDTO(CreateAccountRequest accountDTO);
+    void insertAccount(CreateAccountRequest accountDTO);
 
-    Page<AccountResponse> getAllPaginatedAccountDTOs(int page, int size);
+    Page<AccountResponse> getAllPaginatedAccounts(int page, int size);
 
-    void deleteAccountDTOByID(int id);
+    void deleteAccountByID(int id);
 
-    AccountResponse getAccountDTOByID(int id);
+    AccountResponse getAccountByID(int id);
+
+    AccountResponse getAccountByEmail(String email);
+
+    Integer getIDByEmail(String email);
 }

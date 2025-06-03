@@ -4,6 +4,7 @@ import com.HE180030.dto.request.DeleteRequest;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.service.QuantitiesSoldService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/quantity")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class QuantitiesSoldController {
     QuantitiesSoldService qSrv;
     Logger logger = LoggerFactory.getLogger(QuantitiesSoldController.class);
 
-    public QuantitiesSoldController(QuantitiesSoldService qSrv) {
-        this.qSrv = qSrv;
-    }
+//    public QuantitiesSoldController(QuantitiesSoldService qSrv) {
+//        this.qSrv = qSrv;
+//    }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(

@@ -1,49 +1,22 @@
 package com.HE180030.security.utils;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.logging.Logger;
 
 public class SecurityUtils {
-    public static @NotNull Integer getCurrentUserID() {
+    public static @NotNull User getCurrentUser() {
+        Logger logger = Logger.getLogger(SecurityUtils.class.getName());
+        logger.info("getCurrentUser");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        logger.info("Current user: " + auth);
         if (auth != null && auth.getPrincipal() instanceof UserDetails) {
-            return ((CustomUserDetails) auth.getPrincipal()).getId();
+            return (User) auth.getPrincipal();
         }
         throw new RuntimeException("No authentication found");
-    }
-}
-
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-@AllArgsConstructor
-class CustomUserDetails implements UserDetails {
-    @Getter
-    int id;
-    String username;
-    String password;
-    Collection<? extends GrantedAuthority> authorities;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(authorities);
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 }

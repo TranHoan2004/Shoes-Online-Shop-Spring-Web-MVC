@@ -14,16 +14,17 @@ import java.util.Date;
 @Entity
 @Table
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = {"product", "account"})
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     Account account;
 

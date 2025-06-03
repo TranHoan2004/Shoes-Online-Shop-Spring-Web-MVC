@@ -10,6 +10,7 @@ import com.HE180030.service.ProductService;
 import com.HE180030.utils.UrlIdEncoder;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -21,21 +22,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     ProductRepository repo;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ProductServiceImpl(ProductRepository repo) {
-        this.repo = repo;
-    }
-
     @Override
-    public Page<ProductResponse> getAllPaginatedProductDTO(int page, int size) {
+    public Page<ProductResponse> getAllPaginatedProduct(int page, int size) {
         logger.info("getAllProductDTO");
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = repo.findAll(pageable);
@@ -49,14 +48,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getByCategoryId(int id) {
+    public List<ProductResponse> getByCategoryID(int id) {
         return repo.findByCategoryId(id)
                 .stream().map(this::convert)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductResponse> searchProductDTOsByName(String text) {
+    public List<ProductResponse> searchProductsByName(String text) {
         return repo.searchByName("%" + text + "%")
                 .stream().map(this::convert)
                 .collect(Collectors.toList());
@@ -70,12 +69,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductDTOByID(int id) {
-
+    public void deleteProductByID(int id) {
+        logger.info("deleteProductByID");
     }
 
     @Override
-    public ProductDetailResponse getProductDTOByID(int id) {
+    public ProductDetailResponse getProductByID(int id) {
         return null;
     }
 
@@ -86,7 +85,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProductBySellID(int id) {
-
+        logger.info("deleteProductBySellID");
+        List<Product> products = repo.findByAccountId(id);
+        products.forEach(product -> {
+            product.setAccount(null);
+            product.setCarts(null);
+            product.setQuantitiesSold(null);
+            product.setReviews(null);
+            repo.delete(product);
+        });
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -29,6 +30,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             ORDER BY p.id DESC
             """)
     List<Product> searchByName(@Param("text") String txt);
+
+    List<Product> findByAccountId(int accountID);
 //
 //    Product getByID(int id);
 //

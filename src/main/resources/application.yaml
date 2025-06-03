@@ -3,9 +3,9 @@ spring:
     name: Shoes_Management
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/Shoes_OnlineShopping?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: hoan2709
+    url: ${URL}
+    username: ${USER_NAME}
+    password: ${PASSWORD}
 
   jpa:
     hibernate:
@@ -32,10 +32,10 @@ spring:
   security:
     user:
       name: user
-      password: $2a$10$x/uOvNKEQSr0tDNQF2TV9uSDbYOiHzh.Hx2dVaCq5b4ps3Auo9fte
+      password: $2a$10$Gr8EIuXubcKPcvPb5BGsPOX4eJsK81GllH0JjP6Xn06CJU/7XIrTC # 123
   config:
     import: "optional:file:.env[.properties]"
 
   app:
-    jwtExpirationMs: 3600000
-    signerKey: 6SjMf1ukIpm75rRJgzNsbo7n2LqJWgKe+SwPqchr+IG2dLkqqY74TF1LSiOXRRdn
+    jwtExpirationMs: ${EXPIRED_TIME}
+    signerKey: ${SIGNER_KEY}

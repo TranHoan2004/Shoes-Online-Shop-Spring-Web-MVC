@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -26,16 +27,11 @@ import java.text.ParseException;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     JWTService service;
     UserDetailsService udService;
     Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
-
-    @Autowired
-    public JWTAuthenticationFilter(JWTService jwtService, UserDetailsService userDetailsService) {
-        this.service = jwtService;
-        this.udService = userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,

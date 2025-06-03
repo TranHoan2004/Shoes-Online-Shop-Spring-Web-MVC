@@ -1,10 +1,14 @@
 package com.HE180030.security.jwt;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TokenStore {
-    private static final Set<String> blacklistedTokens = new HashSet<>();
+    static Set<String> blacklistedTokens = new HashSet<>();
 
     public static void blacklistToken(String token) {
         blacklistedTokens.add(token);

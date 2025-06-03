@@ -15,6 +15,7 @@ import java.util.Set;
 @Entity
 @Table
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = {"carts", "quantitiesSold"})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,18 +58,18 @@ public class Product {
     Category category;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product")
-    Set<Cart> carts;
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    List<Cart> carts;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product")
-    Set<Review> reviews;
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    List<Review> reviews;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product")
-    Set<QuantitesSold> quantitesSold;
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    List<QuantitesSold> quantitiesSold;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sell_id")
     Account account;
 }

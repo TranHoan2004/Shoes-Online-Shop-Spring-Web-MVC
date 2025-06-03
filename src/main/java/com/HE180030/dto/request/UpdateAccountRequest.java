@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateAccountRequest {
+    int id;
     String username;
     String password;
     String email;
-    int id;
     boolean isAdmin;
     boolean isSell;
 }

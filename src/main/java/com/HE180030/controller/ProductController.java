@@ -9,6 +9,7 @@ import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
@@ -25,15 +26,16 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/product")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class ProductController {
     ProductService pSrv;
     CategoryService cateSrv;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ProductController(ProductService pSrv, CategoryService cateSrv) {
-        this.pSrv = pSrv;
-        this.cateSrv = cateSrv;
-    }
+//    public ProductController(ProductService pSrv, CategoryService cateSrv) {
+//        this.pSrv = pSrv;
+//        this.cateSrv = cateSrv;
+//    }
 
     /*Tested*/
     @GetMapping("")
@@ -46,7 +48,7 @@ public class ProductController {
             throw new AccessDeniedException("Access denied");
         }
 
-        Page<ProductResponse> productResponsePage = pSrv.getAllPaginatedProductDTO(page - 1, 9);
+        Page<ProductResponse> productResponsePage = pSrv.getAllPaginatedProduct(page - 1, 9);
         return renderData(assembler, productResponsePage);
     }
 
@@ -67,7 +69,7 @@ public class ProductController {
     public ResponseEntity<?> displayAllProducts(
             @RequestParam(defaultValue = "1") int page) {
         logger.info("displayAllProducts");
-        Page<ProductResponse> productResponsePage = pSrv.getAllPaginatedProductDTO(page - 1, 9);
+        Page<ProductResponse> productResponsePage = pSrv.getAllPaginatedProduct(page - 1, 9);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
@@ -80,7 +82,7 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<?> searchProducts(
             @RequestParam("key") String text) {
-        List<ProductResponse> list = pSrv.searchProductDTOsByName(text);
+        List<ProductResponse> list = pSrv.searchProductsByName(text);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
@@ -95,7 +97,7 @@ public class ProductController {
     public ResponseEntity<?> filterByCategoryId(
             @RequestParam("id") int categoryId) {
         logger.info("Filter category by ID");
-        List<ProductResponse> list = pSrv.getByCategoryId(categoryId);
+        List<ProductResponse> list = pSrv.getByCategoryID(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
@@ -116,7 +118,7 @@ public class ProductController {
         switch (request.getCode()) {
             case 100 -> {
                 logger.info("Delete product by id");
-                pSrv.deleteProductDTOByID(request.getId());
+                pSrv.deleteProductByID(request.getId());
             }
             case 101 -> {
                 logger.info("Delete product");
@@ -141,7 +143,7 @@ public class ProductController {
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
-                        .data(pSrv.getProductDTOByID(id))
+                        .data(pSrv.getProductByID(id))
         );
     }
 

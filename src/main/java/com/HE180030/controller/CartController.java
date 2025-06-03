@@ -1,15 +1,16 @@
 package com.HE180030.controller;
 
-import com.HE180030.dto.CartStatus;
+import com.HE180030.enumerate.CartStatus;
 import com.HE180030.dto.request.DeleteRequest;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.dto.response.CartResponse;
 import com.HE180030.dto.response.ProductResponse;
 import com.HE180030.security.utils.SecurityUtils;
+import com.HE180030.service.AccountService;
 import com.HE180030.service.CartService;
 import com.HE180030.service.ProductService;
-import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -21,29 +22,28 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/cart")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CartController {
     ProductService pSrv;
     CartService cSrv;
+    AccountService aSrv;
     Logger logger = LoggerFactory.getLogger(CartController.class);
-
-    public CartController(CartService cartService, ProductService pSrv) {
-        this.cSrv = cartService;
-        this.pSrv = pSrv;
-    }
 
     @GetMapping("/c")
     public ResponseEntity<?> getCartByUser() {
         logger.info("getCartByUser");
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
-                        .data(cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID()))
+                        .data(cSrv.getCartByAccountID(id))
         );
     }
 
@@ -62,8 +62,8 @@ public class CartController {
     @GetMapping("/amount")
     public ResponseEntity<?> loadAmountCart() {
         logger.info("loadAmountCart");
-        int accountID = SecurityUtils.getCurrentUserID();
-        List<CartResponse> list = cSrv.getCartDTOByAccountID(accountID);
+        int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
+        List<CartResponse> list = cSrv.getCartByAccountID(accountID);
         int totalAmountCart = list.size();
         return ResponseEntity.ok(ApiResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -78,10 +78,10 @@ public class CartController {
             @RequestBody int productID,
             @RequestBody int size) {
         logger.info("addToCart");
-        int accountID = SecurityUtils.getCurrentUserID();
+        int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         String message;
 
-        CartResponse existedCart = cSrv.getCartDTOByAccountIDAndProductID(accountID, productID, size);
+        CartResponse existedCart = cSrv.getCartByAccountIDAndProductID(accountID, productID, size);
         if (existedCart != null) {
             int existedAmount = existedCart.getAmount();
             cSrv.createAmountAndSize(
@@ -123,7 +123,7 @@ public class CartController {
             @RequestBody int amount,
             @RequestBody CartStatus status) {
         logger.info("changeAmountCart");
-        int accountID = SecurityUtils.getCurrentUserID();
+        int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         String message = "";
         if (status == CartStatus.Add) {
             amount++;
@@ -132,7 +132,7 @@ public class CartController {
             amount--;
             message = "Decreased amount!";
         }
-        cSrv.updateAmountCartDTO(accountID, productID, amount);
+        cSrv.updateAmountCart(accountID, productID, amount);
         return ResponseEntity.status(HttpStatus.CONTINUE).body(
                 ApiResponse.builder()
                         .code(HttpStatus.CONTINUE.value())
@@ -144,10 +144,11 @@ public class CartController {
     public ResponseEntity<?> deleteCartByAccount(
             @RequestBody DeleteRequest request) {
         logger.info("delete");
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         switch (request.getCode()) {
             case 100 -> {
                 logger.info("delete cart by account");
-                cSrv.deleteCartDTOByAccountID(SecurityUtils.getCurrentUserID());
+                cSrv.deleteCartByAccountID(id);
             }
             case 101 -> {
                 logger.info("delete cart by product");
@@ -168,12 +169,13 @@ public class CartController {
     @GetMapping("/total_money")
     public ResponseEntity<?> totalMoneyCart() {
         logger.info("totalMoneyCart");
-        List<CartResponse> carts = cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID());
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
+        List<CartResponse> carts = cSrv.getCartByAccountID(id);
         List<ProductResponse> products = pSrv.getAllProducts();
         double totalMoney = 0;
         for (CartResponse c : carts) {
             for (ProductResponse p : products) {
-                if (c.getProductId() == p.getId()) {
+                if (Objects.equals(c.getProductId(), p.getId())) {
                     totalMoney = totalMoney + p.getPrice() * c.getAmount();
                 }
             }
@@ -197,10 +199,11 @@ public class CartController {
 
     private @NotNull @Unmodifiable Map<String, Object> displayContent(double number) {
         AtomicReference<Double> totalMoney = new AtomicReference<>((double) 0);
-        List<CartResponse> carts = cSrv.getCartDTOByAccountID(SecurityUtils.getCurrentUserID());
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
+        List<CartResponse> carts = cSrv.getCartByAccountID(id);
         List<ProductResponse> products = pSrv.getAllProducts();
         carts.forEach(cartDTO -> products.forEach(productDTO -> {
-            if (cartDTO.getProductId() == productDTO.getId()) {
+            if (Objects.equals(cartDTO.getProductId(), productDTO.getId())) {
                 totalMoney.updateAndGet(v -> (v + (productDTO.getPrice() * cartDTO.getAmount())));
             }
         }));

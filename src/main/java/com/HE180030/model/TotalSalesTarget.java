@@ -15,7 +15,7 @@ public class TotalSalesTarget {
     @Id
     int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @MapsId
     Account account;

@@ -1,5 +1,7 @@
 package com.HE180030.service;
 
 public interface ReviewService {
-    void deleteReviewDTOByProductID(int productID);
+    void deleteReviewByProductID(int productID);
+
+    void deleteReviewByAccountID(int accountID);
 }

@@ -15,6 +15,7 @@ import java.util.Set;
 @Entity
 @Table
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = {"products", "suppliers"})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +25,10 @@ public class Category {
     String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    Set<Product> products;
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    List<Product> products;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    Set<Supplier> suppliers;
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    List<Supplier> suppliers;
 }

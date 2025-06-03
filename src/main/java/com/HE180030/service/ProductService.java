@@ -9,19 +9,19 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProductService {
-    Page<ProductResponse> getAllPaginatedProductDTO(int page, int size);
+    Page<ProductResponse> getAllPaginatedProduct(int page, int size);
 
     ProductResponse getLastProduct();
 
-    List<ProductResponse> getByCategoryId(int id);
+    List<ProductResponse> getByCategoryID(int id);
 
-    List<ProductResponse> searchProductDTOsByName(String text);
+    List<ProductResponse> searchProductsByName(String text);
 
     List<ProductResponse> getAllProducts();
 
-    void deleteProductDTOByID(int id);
+    void deleteProductByID(int id);
 
-    ProductDetailResponse getProductDTOByID(int id);
+    ProductDetailResponse getProductByID(int id);
 
     void insert(AddProductRequest productDTO);
 

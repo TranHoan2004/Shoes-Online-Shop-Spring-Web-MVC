@@ -1,4 +1,4 @@
-package com.HE180030.dto.response;
+package com.HE180030.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,9 +8,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountResponse {
-    String id;
-    String email;
-    boolean isSell;
-    boolean isAdmin;
+public class TokenRequest {
+    String refreshToken;
 }

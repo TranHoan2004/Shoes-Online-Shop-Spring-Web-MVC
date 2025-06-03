@@ -1,9 +1,11 @@
 package com.HE180030.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -13,13 +15,15 @@ import java.util.Set;
 @Entity
 @Table
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = {"accounts"})
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
-    private String name;
+    String name;
 
-    @OneToMany(mappedBy = "role")
-    private Set<Account> accounts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
+    List<Account> accounts;
 }

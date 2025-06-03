@@ -3,6 +3,7 @@ package com.HE180030.controller;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.service.CategoryService;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/category")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryController {
     Logger logger = LoggerFactory.getLogger(CategoryController.class);
     CategoryService cateSrv;
 
-    public CategoryController(CategoryService categoryService) {
-        this.cateSrv = categoryService;
-    }
+//    public CategoryController(CategoryService categoryService) {
+//        this.cateSrv = categoryService;
+//    }
 
     /*Tested*/
     @GetMapping("")
