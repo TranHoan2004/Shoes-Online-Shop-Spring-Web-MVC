@@ -35,6 +35,7 @@ spring:
       password: $2a$10$Gr8EIuXubcKPcvPb5BGsPOX4eJsK81GllH0JjP6Xn06CJU/7XIrTC # 123
   config:
     import: "optional:file:.env[.properties]"
+    openAPIPath: "http://localhost:8080/v3/api-docs"
 
   app:
     jwtExpirationMs: ${EXPIRED_TIME}
