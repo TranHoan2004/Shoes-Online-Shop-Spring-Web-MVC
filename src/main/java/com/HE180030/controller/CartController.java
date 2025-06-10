@@ -1,5 +1,7 @@
 package com.HE180030.controller;
 
+import com.HE180030.dto.request.ChangeAmountRequest;
+import com.HE180030.dto.request.CreateCartRequest;
 import com.HE180030.enumerate.CartStatus;
 import com.HE180030.dto.request.DeleteRequest;
 import com.HE180030.dto.response.ApiResponse;
@@ -26,7 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/c")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CartController {
@@ -35,137 +37,313 @@ public class CartController {
     AccountService aSrv;
     Logger logger = LoggerFactory.getLogger(CartController.class);
 
-    @GetMapping("/c")
+    /**
+     * Tested
+     * <p><strong>Output:</strong></p>
+     * <pre>
+     *     {
+     *     "code": 200,
+     *     "message": "OK",
+     *     "data": [
+     *         {
+     *             "id": "Mg==",
+     *             "amount": 1000,
+     *             "size": "1",
+     *             "productId": "MTE="
+     *         }
+     *     ],
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
+    @GetMapping("/cart")
     public ResponseEntity<?> getCartByUser() {
         logger.info("getCartByUser");
         int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.OK.value())
-                        .message(HttpStatus.OK.getReasonPhrase())
-                        .data(cSrv.getCartByAccountID(id))
-        );
+        return returnResponseData(cSrv.getCartByAccountID(id), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
     }
 
+    /**
+     * Tested
+     * <p><strong>Output:</strong></p>
+     * <pre>
+     *     {
+     *     "code": 200,
+     *     "message": "OK",
+     *     "data": {
+     *         "list of products": [
+     *             {
+     *                 "id": "MTE=",
+     *                 "image": "<a href="https://myshoes">...</a>.",
+     *                 "name": "GI├ÇY NIKE AIR MAX AP NAM - X├üM XANH _ Baocao",
+     *                 "title": "GI├ÇY NIKE AIR MAX AP NAM - X├üM XANH",
+     *                 "price": 180.0,
+     *                 "color": "Gray"
+     *             },
+     *             {
+     *                 "id": "MTU=",
+     *                 "image": "<a href="https://product.hsta">...</a>",
+     *                 "name": "Adidas Ultraboost 4.0 -2",
+     *                 "title": "Adidas Ultraboost 4.0",
+     *                 "price": 156.0,
+     *                 "color": "Blue"
+     *             },
+     *             ...rest
+     *           ],
+     *         "list of carts": [
+     *             {
+     *                 "id": "Mg==",
+     *                 "amount": 1000,
+     *                 "size": "1",
+     *                 "productId": "MTE="
+     *             }
+     *         ],
+     *         "total money VAT": 18000.0,
+     *         "total money": 180000.0
+     *     },
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @GetMapping("/manage")
     public ResponseEntity<?> manageCart() {
         logger.info("manageCart");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.OK.value())
-                        .message(HttpStatus.OK.getReasonPhrase())
-                        .data(displayContent(0.1))
-        );
+        return returnResponseData(displayContent(0.1), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
     }
 
-    /*Tested*/
+    /**
+     * Tested
+     * <p><strong>Request with bearer token</strong></p>
+     * <p><strong>Output:</strong></p>
+     * <pre>
+     *     {
+     *     "code": 200,
+     *     "message": "OK",
+     *     "data": {
+     *         "list of products": [
+     *             {
+     *                 "id": "MTE=",
+     *                 "image": "<a href="https://myshoes">...</a>.",
+     *                 "name": "GI├ÇY NIKE AIR MAX AP NAM - X├üM XANH _ Baocao",
+     *                 "title": "GI├ÇY NIKE AIR MAX AP NAM - X├üM XANH",
+     *                 "price": 180.0,
+     *                 "color": "Gray"
+     *             },
+     *             {
+     *                 "id": "MTU=",
+     *                 "image": "<a href="https://product.hsta">...</a>",
+     *                 "name": "Adidas Ultraboost 4.0 -2",
+     *                 "title": "Adidas Ultraboost 4.0",
+     *                 "price": 156.0,
+     *                 "color": "Blue"
+     *             },
+     *             ...rest
+     *           ],
+     *         "list of carts": [
+     *             {
+     *                 "id": "Mg==",
+     *                 "amount": 1000,
+     *                 "size": "1",
+     *                 "productId": "MTE="
+     *             }
+     *         ],
+     *         "total money VAT": 18000.0,
+     *         "total money": 180000.0
+     *     },
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @GetMapping("/amount")
     public ResponseEntity<?> loadAmountCart() {
         logger.info("loadAmountCart");
         int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         List<CartResponse> list = cSrv.getCartByAccountID(accountID);
         int totalAmountCart = list.size();
-        return ResponseEntity.ok(ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Total amount of cart is: " + totalAmountCart)
-                .data(totalAmountCart)
-                .build()
-        );
+        return returnResponseData(totalAmountCart, HttpStatus.OK.value(), "Total amount of cart is: " + totalAmountCart);
     }
 
+    /**
+     * Tested
+     * <p><strong>Request:</strong></p>
+     * <pre>
+     * {
+     *     "productID": "11",
+     *     "size": 3
+     * }
+     * </pre>
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 100,
+     *     "message": "Redirect to manage cart",
+     *     "data": "Number of products increase successfully",
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @PostMapping("/add_to_cart")
-    public ResponseEntity<?> addToCart(
-            @RequestBody int productID,
-            @RequestBody int size) {
+    public ResponseEntity<?> addToCart(@RequestBody CreateCartRequest request) {
         logger.info("addToCart");
         int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         String message;
 
-        CartResponse existedCart = cSrv.getCartByAccountIDAndProductID(accountID, productID, size);
+        CartResponse existedCart = cSrv.getCartByAccountIDAndProductID(accountID, request.getProductID());
         if (existedCart != null) {
             int existedAmount = existedCart.getAmount();
-            cSrv.createAmountAndSize(
-                    accountID,
-                    productID,
-                    existedAmount > 5 ? (existedAmount + 1) : (existedAmount + 2),
-                    size
-            );
+            cSrv.updateCart(accountID, request.getProductID(), existedAmount + request.getAmount());
             message = "Number of products increase successfully";
         } else {
-            cSrv.create(accountID, productID, 2, size);
+            cSrv.create(accountID, request.getProductID(), request.getAmount());
             message = "Added product into cart";
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.CONTINUE.value())
-                        .message("Redirect to manage cart")
-                        .data(message)
-        );
+        return returnResponseData(message, HttpStatus.CONTINUE.value(), "Redirect to manage cart");
     }
 
-    @GetMapping("")
+    /**
+     * Tested
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 200,
+     *     "message": "OK",
+     *     "data": {
+     *         "content": {
+     *             "list of products": [
+     *                 {
+     *                     "id": "MTE=",
+     *                     "image": "<a href="https://myshoes.vn/image/ca...">...</a>",
+     *                     "name": "GI├ÇY NIKE AIR MAX AP NAM - X├üM XANH _ Baocao",
+     *                     "title": "GI├ÇY NIKE AIR MAX AP NAM - X├üM XANH",
+     *                     "price": 180.0,
+     *                     "color": "Gray"
+     *                 },
+     *                 {
+     *                     "id": "MTU=",
+     *                     "image": "<a href="https://product.hstatic.net/10002...">...</a>",
+     *                     "name": "Adidas Ultraboost 4.0 -2",
+     *                     "title": "Adidas Ultraboost 4.0",
+     *                     "price": 156.0,
+     *                     "color": "Blue"
+     *                 },
+     *                 ...rest
+     *             ],
+     *             "total money": 180000.0,
+     *             "total money VAT": 198000.00000000003,
+     *             "list of carts": [
+     *                 {
+     *                     "id": "Mg==",
+     *                     "amount": 1000,
+     *                     "size": "1",
+     *                     "productId": "MTE="
+     *                 }
+     *             ]
+     *         },
+     *         "status": [
+     *             "Sub",
+     *             "Add"
+     *         ]
+     *     },
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
+    @GetMapping("/")
     public ResponseEntity<?> getCart() {
         logger.info("getCart");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.OK.value())
-                        .message(HttpStatus.OK.getReasonPhrase())
-                        .data(Map.of(
-                                "content", displayContent(1.1),
-                                "status", CartStatus.class.getEnumConstants()
-                        ))
-        );
+        return returnResponseData(Map.of("content", displayContent(1.1), "status", CartStatus.class.getEnumConstants()), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
     }
 
+    /**
+     * Tested
+     * <p><strong>Request:</strong></p>
+     * <pre>
+     * {
+     *     "productID": 11,
+     *     "amount": 2,
+     *     "status": "Sub"
+     * }
+     * </pre>
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 100,
+     *     "message": "Decreased amount!",
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @PatchMapping("/change_amount")
-    public ResponseEntity<?> changeAmountCart(
-            @RequestBody int productID,
-            @RequestBody int amount,
-            @RequestBody CartStatus status) {
+    public ResponseEntity<?> changeAmountCart(@RequestBody ChangeAmountRequest request) {
         logger.info("changeAmountCart");
         int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         String message = "";
-        if (status == CartStatus.Add) {
-            amount++;
+        int amount = request.getAmount();
+        if (request.getStatus() == CartStatus.Add) {
             message = "Increased amount!";
-        } else if (status == CartStatus.Sub) {
-            amount--;
+        } else if (request.getStatus() == CartStatus.Sub) {
+            amount = -amount;
             message = "Decreased amount!";
         }
-        cSrv.updateAmountCart(accountID, productID, amount);
-        return ResponseEntity.status(HttpStatus.CONTINUE).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.CONTINUE.value())
-                        .message(message)
-        );
+        cSrv.updateAmountCart(accountID, request.getProductID(), amount);
+        return returnResponseData(null, HttpStatus.CONTINUE.value(), message);
     }
 
+    /**
+     * Tested
+     * <p><strong>Request:</strong></p>
+     * <pre>
+     * {
+     *     "code": 101,
+     *     "id": 11
+     * }
+     * </pre>
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 200,
+     *     "message": "Delete successfully!",
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCartByAccount(
-            @RequestBody DeleteRequest request) {
+    public ResponseEntity<?> deleteCartByAccount(@RequestBody DeleteRequest request) {
         logger.info("delete");
         int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
-        switch (request.getCode()) {
-            case 100 -> {
-                logger.info("delete cart by account");
-                cSrv.deleteCartByAccountID(id);
+        try {
+            switch (request.getCode()) {
+                case 100 -> {
+                    logger.info("delete cart by account");
+                    cSrv.deleteCartByAccountID(id);
+                }
+                case 101 -> {
+                    logger.info("delete cart by product");
+                    cSrv.deleteCartByAccountIDAndProductID(id, request.getId());
+                }
             }
-            case 101 -> {
-                logger.info("delete cart by product");
-                cSrv.deleteCartByProductID(request.getId());
-            }
-            case 102 -> {
-                logger.info("delete cart");
-                cSrv.deleteCart(request.getId());
-            }
+            return returnResponseData(null, HttpStatus.OK.value(), "Delete successfully!");
+        } catch (Exception e) {
+            logger.error("delete cart by account ID and product ID: {}", e.getMessage());
+            return returnResponseData(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.OK.value())
-                        .message("Delete successfully!")
-        );
     }
 
+    /**
+     * Tested
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 100,
+     *     "message": "Total amount of VAT is: 911.0\nTotal amount of money is: 828.0",
+     *     "data": {
+     *         "VAT": 911.0,
+     *         "total money": 911.0
+     *     },
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @GetMapping("/total_money")
     public ResponseEntity<?> totalMoneyCart() {
         logger.info("totalMoneyCart");
@@ -183,18 +361,7 @@ public class CartController {
 
         double totalMoneyVAT = totalMoney * 1.1;
         totalMoneyVAT = Math.round(totalMoneyVAT);
-        return ResponseEntity.status(HttpStatus.CONTINUE).body(
-                ApiResponse.builder()
-                        .code(HttpStatus.CONTINUE.value())
-                        .message(
-                                "Total amount of VAT is: " + totalMoneyVAT +
-                                        "\nTotal amount of money is: " + totalMoney
-                        )
-                        .data(Map.of(
-                                "VAT", totalMoneyVAT,
-                                "total money", totalMoneyVAT
-                        ))
-        );
+        return returnResponseData(Map.of("VAT", totalMoneyVAT, "total money", totalMoneyVAT), HttpStatus.CONTINUE.value(), "Total amount of VAT is: " + totalMoneyVAT + "\nTotal amount of money is: " + totalMoney);
     }
 
     private @NotNull @Unmodifiable Map<String, Object> displayContent(double number) {
@@ -208,11 +375,10 @@ public class CartController {
             }
         }));
         double totalMoneyVAT = totalMoney.get() * number;
-        return Map.of(
-                "total money", totalMoney.get(),
-                "total money VAT", totalMoneyVAT,
-                "list of carts", carts,
-                "list of products", products
-        );
+        return Map.of("total money", totalMoney.get(), "total money VAT", totalMoneyVAT, "list of carts", carts, "list of products", products);
+    }
+
+    private ResponseEntity<?> returnResponseData(Object result, int code, String message) {
+        return ResponseEntity.ok(ApiResponse.builder().data(result).code(code).message(message).build());
     }
 }

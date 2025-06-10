@@ -9,8 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
-    //    void insert(int accountID, double totalPrice, String context, int phone, String delivery, String name, String typePay);
-//
-//    List<Invoice> getAllInvoiceByID(int id);
     List<Invoice> findByAccountId(int accountId);
 }

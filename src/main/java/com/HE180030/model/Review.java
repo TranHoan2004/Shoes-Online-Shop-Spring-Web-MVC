@@ -1,35 +1,38 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "review", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = {"product", "account"})
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id", nullable = false)
+    Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
-    Product product;
+    @Size(max = 500)
+    @Column(name = "content_review", length = 500)
+    String contentReview;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "date_review")
+    LocalDate dateReview;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     Account account;
 
-    @Column(length = 500)
-    String contentReview;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    Product product;
 
-    LocalDate dateReview;
 }

@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -86,14 +85,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProductBySellID(int id) {
         logger.info("deleteProductBySellID");
-        List<Product> products = repo.findByAccountId(id);
-        products.forEach(product -> {
-            product.setAccount(null);
-            product.setCarts(null);
-            product.setQuantitiesSold(null);
-            product.setReviews(null);
-            repo.delete(product);
-        });
+        List<Product> products = repo.findBySellId(id);
+        repo.deleteAll(products);
     }
 
     @Override
@@ -113,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductResponse convert(@NotNull Product product) {
         return ProductResponse.builder()
-                .id(UrlIdEncoder.encodeId(product.getId()))
+                .id(UrlIdEncoder.encodeId(String.valueOf(product.getId())))
                 .name(product.getName())
                 .image(product.getImage())
                 .price(product.getPrice())

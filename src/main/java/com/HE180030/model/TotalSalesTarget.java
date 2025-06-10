@@ -1,26 +1,34 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "total_sales_target", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TotalSalesTarget {
     @Id
-    int id;
+    @Column(name = "user_id", nullable = false)
+    Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
     @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     Account account;
 
-    float totalTarget;
+    @NotNull
+    @Column(name = "total_sales", nullable = false)
+    Float totalSales;
 
-    float totalSales;
+    @NotNull
+    @Column(name = "total_target", nullable = false)
+    Float totalTarget;
+
 }

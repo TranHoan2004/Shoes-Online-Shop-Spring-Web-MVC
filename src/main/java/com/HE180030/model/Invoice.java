@@ -1,43 +1,34 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "invoice", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Invoice {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id", nullable = false)
+    Integer id;
 
-    double totalPrice;
-
+    @Column(name = "export_date")
     LocalDate exportDate;
 
-    @Transient
-    String context;
+    @NotNull
+    @Column(name = "total_price", nullable = false)
+    Double totalPrice;
 
-    @Transient
-    String typePay;
-
-    @Transient
-    int phone;
-
-    @Transient
-    String delivery;
-
-    @Transient
-    String name;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     Account account;
+
 }

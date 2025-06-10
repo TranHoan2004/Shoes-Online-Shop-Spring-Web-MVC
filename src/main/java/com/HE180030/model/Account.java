@@ -2,58 +2,44 @@ package com.HE180030.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
-import java.util.Set;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "account", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = {"carts", "products", "invoices", "reviews", "totalSalesTargetList"})
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-    @Column(length = 10)
-    String username;
+    @Size(max = 255)
+    @Column(name = "email")
+    private String email;
 
-    String password;
+    @Column(name = "is_admin")
+    private Boolean isAdmin;
 
-    Boolean isSell;
+    @Column(name = "is_sell")
+    private Boolean isSell;
 
-    Boolean isAdmin;
+    @Size(max = 255)
+    @Column(name = "password")
+    private String password;
 
-    String email;
+    @Size(max = 10)
+    @Column(name = "username", length = 10)
+    private String username;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Cart> carts;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Product> products;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Invoice> invoices;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Review> reviews;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TotalSalesTarget> totalSalesTargetList;
-
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    Role role;
+    @JoinColumn(name = "role_id")
+    @JsonIgnore
+    private Role role;
+
 }

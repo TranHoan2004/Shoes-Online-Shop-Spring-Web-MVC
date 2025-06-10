@@ -9,9 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
-//    void deleteByAccountID(int id);
-//
-//    void deleteByProductID(int productID);
-
     List<Review> findByAccountId(int accountID);
 }

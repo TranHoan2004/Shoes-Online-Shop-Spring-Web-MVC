@@ -2,11 +2,14 @@ package com.HE180030.controller;
 
 import com.HE180030.dto.request.*;
 import com.HE180030.dto.response.*;
-import com.HE180030.model.Account;
 import com.HE180030.security.jwt.*;
 import com.HE180030.security.utils.SecurityUtils;
 import com.HE180030.service.*;
 import com.nimbusds.jwt.JWTClaimsSet;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,7 +31,9 @@ import java.util.Random;
 @RequestMapping("/account")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Tag(name = "Account Controller", description = "Controller for managing accounts")
 public class AccountController {
+    // <editor-fold> desc="Attributes"
     AccountService aSrv;
     CartService cSrv;
     ProductService pSrv;
@@ -41,6 +46,7 @@ public class AccountController {
     @NonFinal
     static String code;
     Logger logger = LoggerFactory.getLogger(AccountController.class);
+    // </editor-fold>
 
     /**
      * <p>Testing successfully</p>
@@ -58,13 +64,26 @@ public class AccountController {
      *   "code": 200,
      *   "message": "Throw access token successfully",
      *   "data": {
-     *     "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ5b3VyLWFwcCIsInN1YiI6InNub3doZWFkMjAwM0BnbWFpbC5jb20iLCJ0eXAiOiJhY2Nlc3MiLCJleHAiOjE3NTI0NTU2NzMsImlhdCI6MTc0ODg1NTY3M30.WeE6W6I6fKDjgiH4WzbJYezeDiUJf9ERnVsN_1sWyVs",
-     *     "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ5b3VyLWFwcCIsInN1YiI6IjEyMzQ1NiIsInR5cCI6InJlZnJlc2giLCJleHAiOjE3NTI0NTU2NzMsImlhdCI6MTc0ODg1NTY3M30.CbwvPy8DJY9BWikePbXKtB3_19WcxsR1MFLeMG62cFc"
+     *     "accessToken": "eyJhb",
+     *     "refreshToken": "eyJhbG"
      *   },
      *   "dataSize": 0
      * }
      * </pre>
      */
+    @Operation(
+            summary = "Login using username and password",
+            method = "login",
+            description = "Used to permit access permission based on username and password",
+            tags = {"Authentication"},
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200", description = "OK",
+                            content = @Content(schema = @Schema(implementation = TokenResponse.class))
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Invalid token")
+            }
+    )
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UsernameAndPasswordRequest request) throws Exception {
         Authentication manager = authenticationManager.authenticate(
@@ -90,7 +109,7 @@ public class AccountController {
      * <p><strong>Request Body:</strong></p>
      * <pre>
      * {
-     *   "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ5b3VyLWFwcCIsInN1YiI6IjEyMzQ1NiIsInR5cCI6InJlZnJlc2giLCJleHAiOjE3NTI0NTYxNTUsImlhdCI6MTc0ODg1NjE1NX0.Mz1HZiNqOhwtqoTL1BCaJV4btJKOgQKmhOi8oMowhcc"
+     *   "refreshToken": "eyJhbG"
      * }
      * </pre>
      *
@@ -100,8 +119,8 @@ public class AccountController {
      *   "code": 200,
      *   "message": "Throw refresh token successfully",
      *   "data": {
-     *     "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ5b3VyLWFwcCIsInN1YiI6IjEyMzQ1NiIsInR5cCI6ImFjY2VzcyIsImV4cCI6MTc1MjQ1NjE2NSwiaWF0IjoxNzQ4ODU2MTY1fQ.sWeVcBws_8lreFgAca0Z57I3cAGChQmPhFQuiC0TliQ",
-     *     "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ5b3VyLWFwcCIsInN1YiI6IjEyMzQ1NiIsInR5cCI6InJlZnJlc2giLCJleHAiOjE3NTI0NTYxNjUsImlhdCI6MTc0ODg1NjE2NX0.K-AW9GhE_4TaNH6ykK6ktlrvjot-fEF3kS2gm5UAv4Y"
+     *     "accessToken": "eyJhbG",
+     *     "refreshToken": "eyJhb"
      *   },
      *   "dataSize": 0
      * }
@@ -140,7 +159,7 @@ public class AccountController {
      * <p><strong>Request Body:</strong></p>
      * <pre>
      * {
-     *     "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ5b3VyLWFwcCIsInN1YiI6IjEyMzQ1NiIsInR5cCI6InJlZnJlc2giLCJleHAiOjE3NTI0NTcwMDgsImlhdCI6MTc0ODg1NzAwOH0.BAf9kiX6Iqv2PlV_tp44M8M6l6ZZ3GIZ5bh_56ZNmYo"
+     *     "refreshToken": "eyJhbGc"
      * }
      * </pre>
      *

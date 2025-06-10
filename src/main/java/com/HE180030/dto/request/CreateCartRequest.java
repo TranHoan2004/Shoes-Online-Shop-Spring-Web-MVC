@@ -1,4 +1,4 @@
-package com.HE180030.dto.response;
+package com.HE180030.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,9 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartResponse {
-    String accountId;
+public class CreateCartRequest {
+    int productID;
     int amount;
-    String size;
-    String productId;
 }

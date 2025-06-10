@@ -1,31 +1,34 @@
 package com.HE180030.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Getter
+@Setter
+@Entity
+@Table(name = "cart", schema = "shoes_onlineshopping")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @EmbeddedId
+    CartId id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id")
+    @MapsId("accountId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
     Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id")
+    @MapsId("productId")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
-    int amount;
+    @NotNull
+    @Column(name = "amount", nullable = false)
+    Integer amount;
 
-    @Column(length = 50)
-    String size;
 }

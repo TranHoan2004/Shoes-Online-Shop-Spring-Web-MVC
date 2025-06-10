@@ -60,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         Page<Account> accounts = repo.findAll(PageRequest.of(page, size));
         return accounts.map(a ->
                 AccountResponse.builder()
-                        .id(UrlIdEncoder.encodeId(a.getId()))
+                        .id(UrlIdEncoder.encodeId(String.valueOf(a.getId())))
                         .email(a.getEmail())
                         .isAdmin(a.getIsAdmin() != null && a.getIsAdmin())
                         .isSell(a.getIsSell() != null && a.getIsSell())
@@ -73,11 +73,6 @@ public class AccountServiceImpl implements AccountService {
         logger.info("Deleting account");
         Optional<Account> account = repo.findById(id);
         account.ifPresent(acc -> {
-            acc.getCarts().clear();
-            acc.getInvoices().clear();
-            acc.getProducts().clear();
-            acc.getReviews().clear();
-            acc.getTotalSalesTargetList().clear();
             acc.setRole(null);
             repo.delete(acc);
         });
@@ -92,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountResponse getAccountByEmail(String email) {
         Account acc = repo.findAccountByEmail(email);
         return AccountResponse.builder()
-                .id(UrlIdEncoder.encodeId(acc.getId()))
+                .id(UrlIdEncoder.encodeId(String.valueOf(acc.getId())))
                 .email(acc.getEmail())
                 .isAdmin(acc.getIsAdmin() != null && acc.getIsAdmin())
                 .isSell(acc.getIsSell() != null && acc.getIsSell())

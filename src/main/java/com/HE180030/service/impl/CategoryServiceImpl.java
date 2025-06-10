@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryResponse convert(@NotNull Category category) {
         return CategoryResponse.builder()
-                .id(UrlIdEncoder.encodeId(category.getId()))
+                .id(UrlIdEncoder.encodeId(String.valueOf(category.getId())))
                 .name(category.getName())
                 .build();
     }

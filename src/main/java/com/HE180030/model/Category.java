@@ -1,34 +1,28 @@
 package com.HE180030.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-import java.util.Set;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "category", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = {"products", "suppliers"})
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id", nullable = false)
+    Integer id;
 
-    @Column(length = 50)
+    @Size(max = 50)
+    @Column(name = "name", length = 50)
     String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    List<Product> products;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    List<Supplier> suppliers;
 }

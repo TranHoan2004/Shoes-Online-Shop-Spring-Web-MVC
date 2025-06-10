@@ -8,11 +8,4 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-//    List<Category> getAll();
-//
-//    Category getByName(String name);
-//
-//    void insert(int categoryId, String name);
-//
-//    String getById(int categoryId);
 }

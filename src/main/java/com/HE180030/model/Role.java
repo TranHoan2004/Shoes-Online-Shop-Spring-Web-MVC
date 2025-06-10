@@ -1,29 +1,28 @@
 package com.HE180030.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-import java.util.Set;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "role", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = {"accounts"})
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id", nullable = false)
+    Integer id;
 
+    @Size(max = 255)
+    @Column(name = "name")
     String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    List<Account> accounts;
 }

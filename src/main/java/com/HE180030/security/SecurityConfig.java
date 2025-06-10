@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .build();
     }
 
-//    @Bean
+    //    @Bean
 //    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
 //        return http
 //                .securityMatcher("/account/login", "/account/logout", "/account/refresh")
@@ -171,22 +171,22 @@ public class SecurityConfig {
 //    @Bean
 //    public SecurityFilterChain cartFilterChain(HttpSecurity http) throws Exception {
 //        return http
-//                .securityMatcher("/cart/**")
+//                .securityMatcher("/c/**")
 //                .csrf(AbstractHttpConfigurer::disable)
 //                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers(
-//                                "/cart/manage",
-//                                "/cart",
-//                                "/cart/delete"
+//                                "/c/manage",
+//                                "/c",
+//                                "/c/delete"
 //                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
 //
 //                        .requestMatchers(
-//                                "/cart/add_to_cart",
-//                                "/cart/change_amount",
-//                                "/cart/total_money",
-//                                "/cart/c",
-//                                "/cart/amount",
-//                                "/cart/add_order"
+//                                "/c/add_to_cart",
+//                                "/c/change_amount",
+//                                "/c/total_money",
+//                                "/c/cart",
+//                                "/c/amount",
+//                                "/c/add_order"
 //                        ).hasAnyRole(ROLE_USER)
 //                        .anyRequest().authenticated()
 //                )
@@ -216,7 +216,10 @@ public class SecurityConfig {
 //                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers(
 //                                "/account/login",
-//                                "/account/add"
+//                                "/account/add",
+//                                "/account/verify_email",
+//                                "/account/code",
+//                                "/account/reset"
 //                        ).permitAll()
 //
 //                        .requestMatchers(

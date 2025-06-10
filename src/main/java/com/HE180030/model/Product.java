@@ -1,75 +1,73 @@
 package com.HE180030.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-import java.util.Set;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "product", schema = "shoes_onlineshopping")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = {"carts", "quantitiesSold"})
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id", nullable = false)
+    Integer id;
 
-    @Column(length = 200)
-    String name;
-
-    @Column(length = 500)
-    String image;
-
-    double price;
-
-    @Column(length = 500)
-    String title;
-
-    @Column(columnDefinition = "LONGTEXT")
-    String description;
-
-    @Column(length = 50)
-    String model;
-
-    @Column(length = 50)
+    @Size(max = 50)
+    @Column(name = "color", length = 50)
     String color;
 
-    @Column(length = 50)
+    @Size(max = 50)
+    @Column(name = "delivery", length = 50)
     String delivery;
 
-    @Column(length = 500)
+    @Column(name = "description", columnDefinition = "LONGTEXT")
+    String description;
+
+    @Size(max = 500)
+    @Column(name = "image", length = 500)
+    String image;
+
+    @Size(max = 500)
+    @Column(name = "image2", length = 500)
     String image2;
 
-    @Column(length = 500)
+    @Size(max = 500)
+    @Column(name = "image3", length = 500)
     String image3;
 
-    @Column(length = 500)
+    @Size(max = 500)
+    @Column(name = "image4", length = 500)
     String image4;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cate_id")
-    Category category;
+    @Size(max = 50)
+    @Column(name = "model", length = 50)
+    String model;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    List<Cart> carts;
+    @Size(max = 200)
+    @Column(name = "name", length = 200)
+    String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    List<Review> reviews;
+    @NotNull
+    @Column(name = "price", nullable = false)
+    Double price;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    List<QuantitesSold> quantitiesSold;
+    @Size(max = 500)
+    @Column(name = "title", length = 500)
+    String title;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sell_id")
-    Account account;
+    Account sell;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cate_id")
+    Category cate;
+
 }

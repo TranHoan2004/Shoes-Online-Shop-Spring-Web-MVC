@@ -7,13 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("""
             FROM Product p
-            WHERE p.category.id=:categoryId
+            WHERE p.cate.id=:categoryId
             """)
     List<Product> findByCategoryId(@Param("categoryId") int categoryId);
 
@@ -31,19 +30,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             """)
     List<Product> searchByName(@Param("text") String txt);
 
-    List<Product> findByAccountId(int accountID);
-//
-//    Product getByID(int id);
-//
-//    List<Product> getListByPage(List<Product> list, int start, int end);
-//
-//    List<Product> getAllByAccountID(int sellID);
-//
-//    void deleteByAccountID(int id);
-//
-//    void deleteByID(int id);
-//
-//    void update(String pname, String pimage, double pprice, String ptitle, String pdescription, int pcategory, String pmodel, String pcolor, String pdelivery, String pimage2, String pimage3, String pimage4, int pid) throws Exception;
-//
-//    void insert(String name, String image, double price, String title, String description, int category, int sid, String model, String color, String delivery, String image2, String image3, String image4);
+    List<Product> findBySellId(int accountID);
 }

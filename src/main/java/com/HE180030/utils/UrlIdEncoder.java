@@ -4,7 +4,7 @@ import java.util.Base64;
 
 // Duc Long
 public class UrlIdEncoder {
-    public static String encodeId(int id) {
+    public static String encodeId(String id) {
         return Base64.getUrlEncoder().encodeToString(String.valueOf(id).getBytes());
     }
 
