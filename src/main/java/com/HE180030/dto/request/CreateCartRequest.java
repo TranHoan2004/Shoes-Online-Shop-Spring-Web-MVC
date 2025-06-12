@@ -1,5 +1,5 @@
 package com.HE180030.dto.request;
 
-public record CreateCartRequest(int productID,
+public record CreateCartRequest(String productID,
                                 int amount) {
 }

@@ -40,10 +40,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartResponse getCartByAccountIDAndProductID(int accountID, int productID) {
+    public CartResponse getCartByAccountIDAndProductID(int accountID, String productID) {
         logger.info("getCartByAccountIDAndProductID");
-//        int pID = UrlIdEncoder.decodeId(productID);
-        Cart c = repo.findByAccountIdAndProductId(accountID, productID);
+        int pID = UrlIdEncoder.decodeId(productID);
+        Cart c = repo.findByAccountIdAndProductId(accountID, pID);
         if (c != null) {
             return CartResponse.builder()
                     .accountId(UrlIdEncoder.encodeId(String.valueOf(accountID)))
@@ -55,12 +55,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void create(int accountID, int productID, int amount) {
+    public void create(int accountID, String productID, int amount) {
         logger.info("create");
-//        int pID = UrlIdEncoder.decodeId(productID);
-        Product p = prodRepo.findById(productID).orElseThrow(() -> new RuntimeException("Product not found"));
+        int pID = UrlIdEncoder.decodeId(productID);
+        Product p = prodRepo.findById(pID).orElseThrow(() -> new RuntimeException("Product not found"));
         Account a = accRepo.findById(accountID).orElseThrow(() -> new RuntimeException("Account not found"));
-        Cart c = repo.findByAccountIdAndProductId(accountID, productID);
+        Cart c = repo.findByAccountIdAndProductId(accountID, pID);
         if (c != null) {
             int currentAmount = c.getAmount();
             c.setAmount(currentAmount + amount);
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
             c = Cart.builder()
                     .id(CartId.builder()
                             .accountId(accountID)
-                            .productId(productID)
+                            .productId(pID)
                             .build())
                     .account(a)
                     .product(p)
@@ -79,10 +79,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateAmountCart(int accountID, int productID, int amount) {
+    public void updateAmountCart(int accountID, String productID, int amount) {
         logger.info("updateAmountCart");
-//        int pID = UrlIdEncoder.decodeId(productID);
-        Cart cart = repo.findByAccountIdAndProductId(accountID, productID);
+        int pID = UrlIdEncoder.decodeId(productID);
+        Cart cart = repo.findByAccountIdAndProductId(accountID, pID);
         if (cart == null) {
             throw new RuntimeException("Cart not found");
         }
@@ -92,22 +92,24 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateCart(int accountID, int productID, int amount) {
+    public void updateCart(int accountID, String productID, int amount) {
         logger.info("updateCart");
-        Cart cart = repo.findByAccountIdAndProductId(accountID, productID);
+        int pID = UrlIdEncoder.decodeId(productID);
+        Cart cart = repo.findByAccountIdAndProductId(accountID, pID);
         cart.setAmount(amount);
         repo.save(cart);
     }
 
     @Override
-    public void deleteCart(int productID) {
+    public void deleteCart(String productID) {
 
     }
 
     @Override
-    public void deleteCartByAccountIDAndProductID(int accountID, int productID) throws Exception {
+    public void deleteCartByAccountIDAndProductID(int accountID, String productID) throws Exception {
         logger.info("deleteCartByAccountIDAndProductID");
-        Cart cart = repo.findByAccountIdAndProductId(accountID, productID);
+        int pID = UrlIdEncoder.decodeId(productID);
+        Cart cart = repo.findByAccountIdAndProductId(accountID, pID);
         if (cart != null) {
             cart.setAccount(null);
             cart.setProduct(null);

@@ -7,17 +7,17 @@ import java.util.List;
 public interface CartService {
     List<CartResponse> getCartByAccountID(int accountId);
 
-    CartResponse getCartByAccountIDAndProductID(int accountID, int productID);
+    CartResponse getCartByAccountIDAndProductID(int accountID, String productID);
 
-    void create(int accountID, int productID, int amount);
+    void create(int accountID, String productID, int amount);
 
-    void updateAmountCart(int accountID, int productID, int amount);
+    void updateAmountCart(int accountID, String productID, int amount);
 
-    void updateCart(int accountID, int productID, int amount);
+    void updateCart(int accountID, String productID, int amount);
 
-    void deleteCart(int productID);
+    void deleteCart(String productID);
 
-    void deleteCartByAccountIDAndProductID(int accountID, int productID) throws Exception;
+    void deleteCartByAccountIDAndProductID(int accountID, String productID) throws Exception;
 
     void deleteCartByAccountID(int id);
 }

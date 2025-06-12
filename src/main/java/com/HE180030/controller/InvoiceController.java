@@ -124,10 +124,10 @@ public class InvoiceController {
 
     // Tested
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteInvoice(
-            @RequestBody DeleteInvoiceRequest request) {
-        logger.info("Delete invoice with id {}", request.id());
-        iSrv.deleteInvoiceByAccountID(request.id());
+    public ResponseEntity<?> deleteInvoice() {
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
+        logger.info("Delete invoice with id {}", id);
+        iSrv.deleteInvoiceByAccountID(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())

@@ -24,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> getAllCategories() {
+        logger.info("getAllCategories");
         return repo.findAll().stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
