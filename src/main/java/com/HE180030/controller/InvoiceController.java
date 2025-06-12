@@ -1,6 +1,7 @@
 package com.HE180030.controller;
 
 import com.HE180030.dto.request.CreateInvoiceRequest;
+import com.HE180030.dto.request.DeleteInvoiceRequest;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.dto.response.InvoiceResponse;
 import com.HE180030.dto.response.ProductResponse;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
 
 @RestController
 @RequestMapping("/invoice")
@@ -34,7 +36,18 @@ public class InvoiceController {
     AccountService aSrv;
     Logger logger = LoggerFactory.getLogger(InvoiceController.class);
 
-    @GetMapping("")
+    /**
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 200,
+     *     "message": "OK",
+     *     "data": [],
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
+    @GetMapping("/")
     public ResponseEntity<?> getAllById() {
         logger.info("getAllById");
         int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
@@ -45,9 +58,34 @@ public class InvoiceController {
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(list)
                         .dataSize(list.size())
+                        .build()
         );
     }
 
+    /**
+     * <p><strong>Request:</strong></p>
+     * <pre>
+     * {
+     *     "totalPrice": "20",
+     *     "exportDate": "2025-06-12",
+     *     "typePay": "VNPay",
+     *     "phone": "0912345678",
+     *     "delivery": "Fastcare"
+     * }
+     * </pre>
+     * <p><strong>Response:</strong></p>
+     * <pre>
+     * {
+     *     "code": 201,
+     *     "message": "Created",
+     *     "data": {
+     *         "total money": 828.0,
+     *         "total money VAT": 911.0
+     *     },
+     *     "dataSize": 0
+     * }
+     * </pre>
+     */
     @PostMapping("/add_order")
     public ResponseEntity<?> addOrder(
             @RequestBody CreateInvoiceRequest invoiceDTO) {
@@ -66,7 +104,11 @@ public class InvoiceController {
                                 .append(" // ");
                     }
                 }));
-        iSrv.insertInvoice(id, invoiceDTO, context.toString());
+        try {
+            iSrv.insertInvoice(id, invoiceDTO, context.toString());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
         double totalMoneyVAT = Math.round(totalMoney.get() * 1.1);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.builder()
@@ -76,15 +118,17 @@ public class InvoiceController {
                                 "total money", totalMoney,
                                 "total money VAT", totalMoneyVAT
                         ))
+                        .build()
         );
     }
 
+    // Tested
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteInvoice(
-            @RequestBody int id) {
-        logger.info("Delete invoice with id {}", id);
-        iSrv.deleteInvoiceByAccountID(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+            @RequestBody DeleteInvoiceRequest request) {
+        logger.info("Delete invoice with id {}", request.id());
+        iSrv.deleteInvoiceByAccountID(request.id());
+        return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message("Delete successfully")

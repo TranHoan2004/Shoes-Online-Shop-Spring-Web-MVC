@@ -26,13 +26,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void updateProfile(UpdateAccountRequest request) {
-        Account acc = repo.findById(UrlIdEncoder.decodeId(String.valueOf(request.getId())))
+        Account acc = repo.findById(UrlIdEncoder.decodeId(String.valueOf(request.id())))
                 .orElse(null);
         if (acc == null) {
             throw new RuntimeException("Account not found");
         }
-        acc.setUsername(request.getUsername());
-        acc.setPassword(request.getPassword());
+        acc.setUsername(request.username());
+        acc.setPassword(request.password());
         acc.setIsAdmin(request.isAdmin());
         acc.setIsSell(request.isSell());
         repo.save(acc);

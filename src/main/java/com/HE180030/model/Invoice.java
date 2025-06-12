@@ -18,6 +18,7 @@ import java.time.LocalDate;
 public class Invoice {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Column(name = "export_date")
@@ -27,7 +28,17 @@ public class Invoice {
     @Column(name = "total_price", nullable = false)
     Double totalPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false, length = 500)
+    String context;
+
+    @Column(nullable = false)
+    String typePay;
+
+    String phone;
+
+    String delivery;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     Account account;
 

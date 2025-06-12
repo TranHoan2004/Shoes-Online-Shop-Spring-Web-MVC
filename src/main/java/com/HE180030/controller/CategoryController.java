@@ -12,19 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/cate")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryController {
     Logger logger = LoggerFactory.getLogger(CategoryController.class);
     CategoryService cateSrv;
 
-//    public CategoryController(CategoryService categoryService) {
-//        this.cateSrv = categoryService;
-//    }
-
     /*Tested*/
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<?> displayCategory() {
         logger.info("Display category");
         return ResponseEntity.status(HttpStatus.OK).body(

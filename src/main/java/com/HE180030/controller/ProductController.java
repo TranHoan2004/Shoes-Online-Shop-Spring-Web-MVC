@@ -115,18 +115,18 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(
             @RequestBody DeleteRequest request) {
         logger.info("delete");
-        switch (request.getCode()) {
+        switch (request.code()) {
             case 100 -> {
                 logger.info("Delete product by id");
-                pSrv.deleteProductByID(request.getId());
+                pSrv.deleteProductByID(request.id());
             }
             case 101 -> {
                 logger.info("Delete product");
-                pSrv.delete(request.getId());
+                pSrv.delete(request.id());
             }
             case 102 -> {
                 logger.info("Delete product by sell id");
-                pSrv.deleteProductBySellID(request.getId());
+                pSrv.deleteProductBySellID(request.id());
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -158,20 +158,20 @@ public class ProductController {
             cateSrv.insertCategoryDTO(categories.size() + 1, customCategory.toUpperCase());
             category = categories.size() + 1;
         }
-        pSrv.insert(AddProductRequest.builder()
-                .name(request.getName())
-                .image(request.getImage())
-                .price(request.getPrice())
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .category(category)
-                .model(request.getModel())
-                .color(request.getColor())
-                .delivery(request.getDelivery())
-                .image2(request.getImage2())
-                .image3(request.getImage3())
-                .image4(request.getImage4())
-                .build());
+        pSrv.insert(new AddProductRequest(
+                request.getName(),
+                request.getImage(),
+                request.getPrice(),
+                request.getTitle(),
+                request.getDescription(),
+                category,
+                0,
+                request.getModel(),
+                request.getColor(),
+                request.getDelivery(),
+                request.getImage2(),
+                request.getImage3(),
+                request.getImage4()));
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())

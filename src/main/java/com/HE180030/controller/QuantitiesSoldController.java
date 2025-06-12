@@ -34,8 +34,8 @@ public class QuantitiesSoldController {
 //        logger.info("delete");
 //        switch (request.getCode()) {
 //            case 100 -> {
-        logger.info("Delete Quantities Sold by id: {}", request.getId());
-        qSrv.deleteQuantitiesSoldDTOByProductID(request.getId());
+        logger.info("Delete Quantities Sold by id: {}", request.id());
+        qSrv.deleteQuantitiesSoldDTOByProductID(request.id());
 //            }
 //            case 101 -> {
 //                logger.info("Delete Quantities Sold by id: {}", request.getId());

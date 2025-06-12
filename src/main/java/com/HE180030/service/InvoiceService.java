@@ -6,7 +6,7 @@ import com.HE180030.dto.response.InvoiceResponse;
 import java.util.List;
 
 public interface InvoiceService {
-    void insertInvoice(int accountID, CreateInvoiceRequest request, String context);
+    void insertInvoice(int accountID, CreateInvoiceRequest request, String context) throws Exception;
 
     void deleteInvoiceByAccountID(int id);
 

@@ -188,13 +188,13 @@ public class CartController {
         int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         String message;
 
-        CartResponse existedCart = cSrv.getCartByAccountIDAndProductID(accountID, request.getProductID());
+        CartResponse existedCart = cSrv.getCartByAccountIDAndProductID(accountID, request.productID());
         if (existedCart != null) {
             int existedAmount = existedCart.getAmount();
-            cSrv.updateCart(accountID, request.getProductID(), existedAmount + request.getAmount());
+            cSrv.updateCart(accountID, request.productID(), existedAmount + request.amount());
             message = "Number of products increase successfully";
         } else {
-            cSrv.create(accountID, request.getProductID(), request.getAmount());
+            cSrv.create(accountID, request.productID(), request.amount());
             message = "Added product into cart";
         }
         return returnResponseData(message, HttpStatus.CONTINUE.value(), "Redirect to manage cart");
@@ -278,14 +278,14 @@ public class CartController {
         logger.info("changeAmountCart");
         int accountID = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         String message = "";
-        int amount = request.getAmount();
-        if (request.getStatus() == CartStatus.Add) {
+        int amount = request.amount();
+        if (request.status() == CartStatus.Add) {
             message = "Increased amount!";
-        } else if (request.getStatus() == CartStatus.Sub) {
+        } else if (request.status() == CartStatus.Sub) {
             amount = -amount;
             message = "Decreased amount!";
         }
-        cSrv.updateAmountCart(accountID, request.getProductID(), amount);
+        cSrv.updateAmountCart(accountID, request.productID(), amount);
         return returnResponseData(null, HttpStatus.CONTINUE.value(), message);
     }
 
@@ -312,14 +312,14 @@ public class CartController {
         logger.info("delete");
         int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         try {
-            switch (request.getCode()) {
+            switch (request.code()) {
                 case 100 -> {
                     logger.info("delete cart by account");
                     cSrv.deleteCartByAccountID(id);
                 }
                 case 101 -> {
                     logger.info("delete cart by product");
-                    cSrv.deleteCartByAccountIDAndProductID(id, request.getId());
+                    cSrv.deleteCartByAccountIDAndProductID(id, request.id());
                 }
             }
             return returnResponseData(null, HttpStatus.OK.value(), "Delete successfully!");

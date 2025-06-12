@@ -87,7 +87,7 @@ public class AccountController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UsernameAndPasswordRequest request) throws Exception {
         Authentication manager = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
 
         UserDetails userDetails = (UserDetails) manager.getPrincipal();
@@ -128,11 +128,11 @@ public class AccountController {
      */
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody TokenRequest refreshToken) throws Exception {
-        if (TokenStore.isTokenBlacklisted(refreshToken.getRefreshToken())) {
+        if (TokenStore.isTokenBlacklisted(refreshToken.refreshToken())) {
             return ResponseEntity.status(401).body("Refresh token is invalidated");
         }
 
-        JWTClaimsSet claims = jwtService.validateToken(refreshToken.getRefreshToken());
+        JWTClaimsSet claims = jwtService.validateToken(refreshToken.refreshToken());
         if (!"refresh".equals(claims.getStringClaim("typ"))) {
             return ResponseEntity.badRequest().body("Invalid token type");
         }
@@ -142,7 +142,7 @@ public class AccountController {
         String newRefreshToken = jwtService.createRefreshToken(username);
 
         // Blacklist the old refresh token
-        TokenStore.blacklistToken(refreshToken.getRefreshToken());
+        TokenStore.blacklistToken(refreshToken.refreshToken());
 
         return returnResponseData(
                 TokenResponse.builder()
@@ -174,20 +174,20 @@ public class AccountController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody TokenRequest refreshToken) throws Exception {
-        if (TokenStore.isTokenBlacklisted(refreshToken.getRefreshToken())) {
+        if (TokenStore.isTokenBlacklisted(refreshToken.refreshToken())) {
             return returnResponseData(null,
                     HttpStatus.UNAUTHORIZED.value(),
                     "Refresh token is invalidated"
             );
         }
-        JWTClaimsSet claims = jwtService.validateToken(refreshToken.getRefreshToken());
+        JWTClaimsSet claims = jwtService.validateToken(refreshToken.refreshToken());
         if (!"refresh".equals(claims.getStringClaim("typ"))) {
             return returnResponseData(null,
                     HttpStatus.BAD_REQUEST.value(),
                     "Invalid token"
             );
         }
-        TokenStore.blacklistToken(refreshToken.getRefreshToken());
+        TokenStore.blacklistToken(refreshToken.refreshToken());
         return returnResponseData(null,
                 HttpStatus.OK.value(),
                 "Logged out successfully"
@@ -331,7 +331,7 @@ public class AccountController {
     @PatchMapping("/reset")
     public ResponseEntity<?> updatePassword(@RequestBody UsernameAndPasswordRequest request) {
         logger.info("updatePassword");
-        aSrv.updatePassword(request.getUsername(), encoder.encode(request.getPassword()));
+        aSrv.updatePassword(request.username(), encoder.encode(request.password()));
         return returnResponseData(
                 null,
                 HttpStatus.OK.value(),
