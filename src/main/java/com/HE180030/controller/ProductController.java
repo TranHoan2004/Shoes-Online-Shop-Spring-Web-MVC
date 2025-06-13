@@ -2,10 +2,12 @@ package com.HE180030.controller;
 
 import com.HE180030.dto.request.AddProductRequest;
 import com.HE180030.dto.request.DeleteRequest;
+import com.HE180030.dto.request.IdRequest;
 import com.HE180030.dto.request.ProductRequest;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.dto.response.CategoryResponse;
 import com.HE180030.dto.response.ProductResponse;
+import com.HE180030.security.utils.SecurityUtils;
 import com.HE180030.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -24,21 +26,18 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/p")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductController {
     ProductService pSrv;
     CategoryService cateSrv;
+    QuantitiesSoldService qSrv;
+    AccountService aSrv;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
-//    public ProductController(ProductService pSrv, CategoryService cateSrv) {
-//        this.pSrv = pSrv;
-//        this.cateSrv = cateSrv;
-//    }
-
     /*Tested*/
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<?> displayAllPaginatedProducts(
             @RequestParam(value = "page", defaultValue = "1") int page,
             PagedResourcesAssembler<ProductResponse> assembler,
@@ -65,6 +64,7 @@ public class ProductController {
         );
     }
 
+    /*Tested*/
     @GetMapping("/list")
     public ResponseEntity<?> displayAllProducts(
             @RequestParam(defaultValue = "1") int page) {
@@ -76,9 +76,11 @@ public class ProductController {
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(productResponsePage)
                         .dataSize(productResponsePage.getSize())
+                        .build()
         );
     }
 
+    /*Tested*/
     @GetMapping("/search")
     public ResponseEntity<?> searchProducts(
             @RequestParam("key") String text) {
@@ -93,9 +95,10 @@ public class ProductController {
         );
     }
 
+    /*Tested*/
     @GetMapping("/filter")
     public ResponseEntity<?> filterByCategoryId(
-            @RequestParam("id") int categoryId) {
+            @RequestParam("id") String categoryId) {
         logger.info("Filter category by ID");
         List<ProductResponse> list = pSrv.getByCategoryID(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -111,6 +114,7 @@ public class ProductController {
         );
     }
 
+    /*Tested*/
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteProduct(
             @RequestBody DeleteRequest request) {
@@ -118,35 +122,37 @@ public class ProductController {
         switch (request.code()) {
             case 100 -> {
                 logger.info("Delete product by id");
+                qSrv.deleteQuantitiesSoldDTOByProductID(request.id());
                 pSrv.deleteProductByID(request.id());
-            }
-            case 101 -> {
-                logger.info("Delete product");
-                pSrv.delete(request.id());
             }
             case 102 -> {
                 logger.info("Delete product by sell id");
-                pSrv.deleteProductBySellID(request.id());
+                int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
+                pSrv.deleteProductBySellID(id);
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message("Product are successfully deleted")
+                        .build()
         );
     }
 
+    /*Tested*/
     @GetMapping("/load")
     public ResponseEntity<?> loadProduct(
-            @RequestParam int id) {
+            @RequestParam("id") String request) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
-                        .data(pSrv.getProductByID(id))
+                        .data(pSrv.getProductDetailsResponseByID(request))
+                        .build()
         );
     }
 
+    /*Tested*/
     @GetMapping("/add")
     public ResponseEntity<?> addProduct(
             @RequestBody ProductRequest request) {
@@ -158,6 +164,8 @@ public class ProductController {
             cateSrv.insertCategoryDTO(categories.size() + 1, customCategory.toUpperCase());
             category = categories.size() + 1;
         }
+        logger.info(String.valueOf(category));
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
         pSrv.insert(new AddProductRequest(
                 request.getName(),
                 request.getImage(),
@@ -171,26 +179,30 @@ public class ProductController {
                 request.getDelivery(),
                 request.getImage2(),
                 request.getImage3(),
-                request.getImage4()));
+                request.getImage4()), id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message("Product Added!")
+                        .build()
         );
     }
 
+    /*Tested*/
     @GetMapping("/detail")
     public ResponseEntity<?> getProduct(
-            @RequestBody int id) {
+            @RequestParam("id") String request) {
         logger.info("getProduct");
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
-                        .data(pSrv.getById(id))
+                        .data(pSrv.getProductResponseById(request))
+                        .build()
         );
     }
 
+    /*Tested*/
     @PutMapping("/edit")
     public ResponseEntity<?> editProduct(
             @RequestBody ProductRequest request) {
@@ -201,11 +213,13 @@ public class ProductController {
             cateSrv.insertCategoryDTO(list.size() + 1, request.getCustomCategory().toUpperCase());
             request.setCategory(list.size() + 1);
         }
-        pSrv.editProduct(request);
+        int id = aSrv.getIDByEmail(SecurityUtils.getCurrentUser().getUsername());
+        pSrv.editProduct(request, id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message("Product edited successfully")
+                        .build()
         );
     }
 

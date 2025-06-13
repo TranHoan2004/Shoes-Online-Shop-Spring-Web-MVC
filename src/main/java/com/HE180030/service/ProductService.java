@@ -13,23 +13,21 @@ public interface ProductService {
 
     ProductResponse getLastProduct();
 
-    List<ProductResponse> getByCategoryID(int id);
+    List<ProductResponse> getByCategoryID(String id);
 
-    List<ProductResponse> searchProductsByName(String text);
+    ProductResponse getProductResponseById(String id);
 
     List<ProductResponse> getAllProducts();
 
-    void deleteProductByID(int id);
+    List<ProductResponse> searchProductsByName(String text);
 
-    ProductDetailResponse getProductByID(int id);
+    ProductDetailResponse getProductDetailsResponseByID(String id);
 
-    void insert(AddProductRequest productDTO);
+    void insert(AddProductRequest productDTO, int accountId);
 
     void deleteProductBySellID(int id);
 
-    void delete(int id);
+    void deleteProductByID(String id);
 
-    ProductResponse getById(int id);
-
-    void editProduct(ProductRequest request);
+    void editProduct(ProductRequest request, int accountId);
 }

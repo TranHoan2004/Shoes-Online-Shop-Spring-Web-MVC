@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/quantity")
@@ -24,27 +21,18 @@ public class QuantitiesSoldController {
     QuantitiesSoldService qSrv;
     Logger logger = LoggerFactory.getLogger(QuantitiesSoldController.class);
 
-//    public QuantitiesSoldController(QuantitiesSoldService qSrv) {
-//        this.qSrv = qSrv;
-//    }
-
+    // tested
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(
-            @RequestBody DeleteRequest request) {
-//        logger.info("delete");
-//        switch (request.getCode()) {
-//            case 100 -> {
-        logger.info("Delete Quantities Sold by id: {}", request.id());
-        qSrv.deleteQuantitiesSoldDTOByProductID(request.id());
-//            }
-//            case 101 -> {
-//                logger.info("Delete Quantities Sold by id: {}", request.getId());
-//            }
-//        }
+            @RequestParam("id") String request) {
+        logger.info("delete");
+        logger.info("Delete Quantities Sold by id: {}", request);
+        qSrv.deleteQuantitiesSoldDTOByProductID(request);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .code(HttpStatus.OK.value())
                         .message("Quantities sold are successfully deleted")
+                        .build()
         );
     }
 }

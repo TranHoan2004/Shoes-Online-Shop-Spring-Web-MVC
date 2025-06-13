@@ -32,12 +32,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse getCategoryDTOByName(String name) {
-        return null;
+        logger.info("getCategoryDTOByName");
+        Category c = repo.findByName(name);
+        return c == null ? null : CategoryResponse.builder()
+                .name(c.getName())
+                .id(UrlIdEncoder.encodeId(String.valueOf(c.getId())))
+                .build();
     }
 
     @Override
     public void insertCategoryDTO(int categoryId, String name) {
-
+        logger.info("insertCategoryDTO");
+        Category c = Category.builder()
+                .id(categoryId)
+                .name(name)
+                .build();
+        repo.save(c);
     }
 
     private CategoryResponse convert(@NotNull Category category) {

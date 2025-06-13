@@ -3,6 +3,8 @@ package com.HE180030.service.impl;
 import com.HE180030.model.Review;
 import com.HE180030.repository.ReviewRepository;
 import com.HE180030.service.ReviewService;
+import com.HE180030.utils.UrlIdEncoder;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,8 +22,15 @@ public class ReviewServiceImpl implements ReviewService {
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
-    public void deleteReviewByProductID(int productID) {
-
+    public void deleteReviewByProductID(String productID) {
+        logger.info("Deleting review by product ID: " + productID);
+        Review r = repo.findByProductId(UrlIdEncoder.decodeId(productID));
+        if (r == null) {
+            throw new EntityNotFoundException("Review with id " + productID + " not found");
+        }
+        r.setProduct(null);
+        r.setAccount(null);
+        repo.delete(r);
     }
 
     @Override
