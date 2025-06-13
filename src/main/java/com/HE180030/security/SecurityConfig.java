@@ -25,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -35,260 +35,260 @@ public class SecurityConfig {
     String ROLE_SELLER = "SELLER";
     String ROLE_USER = "USER";
 
+//    @Bean
+//    public SecurityFilterChain authFilterChain1(HttpSecurity http) throws Exception {
+//        return http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+//                .build();
+//    }
+
     @Bean
     public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
         return http
+                .securityMatcher("/account/login", "/account/logout", "/account/refresh")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/account/login").permitAll()
+                        .requestMatchers("/account/logout", "/account/refresh").hasAnyRole(
+                                ROLE_ADMIN,
+                                ROLE_SELLER,
+                                ROLE_USER
+                        )
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    //    @Bean
-//    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/account/login", "/account/logout", "/account/refresh")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/account/login").permitAll()
-//                        .requestMatchers("/account/logout", "/account/refresh").hasAnyRole(
-//                                ROLE_ADMIN,
-//                                ROLE_SELLER,
-//                                ROLE_USER
-//                        )
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain productFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/product/**")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/product",
-//                                "/product/last"
-//                        ).permitAll()
-//
-//                        .requestMatchers(
-//                                "/product/edit",
-//                                "/product/delete",
-//                                "/product/list"
-//                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
-//
-//                        .requestMatchers(
-//                                "/product/add",
-//                                "/product/filter",
-//                                "/product/search"
-//                        ).hasAnyRole(ROLE_USER)
-//
-//                        .requestMatchers(
-//                                "/product/detail",
-//                                "/product/load"
-//                        ).hasAnyRole(
-//                                ROLE_ADMIN,
-//                                ROLE_SELLER,
-//                                ROLE_USER
-//                        )
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain invoiceFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/invoice/**")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/invoice/delete"
-//                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
-//
-//                        .requestMatchers(
-//                                "/invoice/add_order",
-//                                "/invoice"
-//                        ).hasAnyRole(
-//                                ROLE_ADMIN,
-//                                ROLE_SELLER,
-//                                ROLE_USER
-//                        )
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain cartFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/c/**")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/c/manage",
-//                                "/c",
-//                                "/c/delete"
-//                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
-//
-//                        .requestMatchers(
-//                                "/c/add_to_cart",
-//                                "/c/change_amount",
-//                                "/c/total_money",
-//                                "/c/cart",
-//                                "/c/amount",
-//                                "/c/add_order"
-//                        ).hasAnyRole(ROLE_USER)
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain accountFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/account/**")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/account/login",
-//                                "/account/add",
-//                                "/account/verify_email",
-//                                "/account/code",
-//                                "/account/reset"
-//                        ).permitAll()
-//
-//                        .requestMatchers(
-//                                "/account/logout",
-//                                "/account/refresh",
-//                                "/account/edit_profile"
-//                        ).hasAnyRole(
-//                                ROLE_ADMIN,
-//                                ROLE_SELLER,
-//                                ROLE_USER
-//                        )
-//
-//                        .requestMatchers(
-//                                "/account/manage",
-//                                "/account.load",
-//                                "/account/delete"
-//                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain categoryFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/account/**")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/category/"
-//                        ).hasAnyRole(
-//                                ROLE_ADMIN,
-//                                ROLE_SELLER,
-//                                ROLE_USER
-//                        )
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
+    @Bean
+    public SecurityFilterChain productFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/p/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/p",
+                                "/p/last"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/p/edit",
+                                "/p/delete",
+                                "/p/list"
+                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
+
+                        .requestMatchers(
+                                "/p/add",
+                                "/p/filter",
+                                "/p/search"
+                        ).hasAnyRole(ROLE_USER)
+
+                        .requestMatchers(
+                                "/p/detail",
+                                "/p/load"
+                        ).hasAnyRole(
+                                ROLE_ADMIN,
+                                ROLE_SELLER,
+                                ROLE_USER
+                        )
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public SecurityFilterChain invoiceFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/invoice/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/invoice/delete"
+                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
+
+                        .requestMatchers(
+                                "/invoice/add_order",
+                                "/invoice"
+                        ).hasAnyRole(
+                                ROLE_ADMIN,
+                                ROLE_SELLER,
+                                ROLE_USER
+                        )
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public SecurityFilterChain cartFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/c/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/c/manage",
+                                "/c",
+                                "/c/delete"
+                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
+
+                        .requestMatchers(
+                                "/c/add_to_cart",
+                                "/c/change_amount",
+                                "/c/total_money",
+                                "/c/cart",
+                                "/c/amount",
+                                "/c/add_order"
+                        ).hasAnyRole(ROLE_USER)
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public SecurityFilterChain accountFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/account/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/account/login",
+                                "/account/add",
+                                "/account/verify_email",
+                                "/account/code",
+                                "/account/reset"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/account/logout",
+                                "/account/refresh",
+                                "/account/edit_profile"
+                        ).hasAnyRole(
+                                ROLE_ADMIN,
+                                ROLE_SELLER,
+                                ROLE_USER
+                        )
+
+                        .requestMatchers(
+                                "/account/manage",
+                                "/account.load",
+                                "/account/delete"
+                        ).hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public SecurityFilterChain categoryFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/cate/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/cate/"
+                        ).hasAnyRole(
+                                ROLE_ADMIN,
+                                ROLE_SELLER,
+                                ROLE_USER
+                        )
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 //
 //    @Bean
 //    public SecurityFilterChain totalTargetSaleFilterChain(HttpSecurity http) throws Exception {
@@ -354,53 +354,34 @@ public class SecurityConfig {
 //                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
 //                .build();
 //    }
-//
-//    @Bean
-//    public SecurityFilterChain quantitiesSoldFilterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .securityMatcher("/quantity/**")
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/quantity/delete"
-//                        ).hasAnyRole(ROLE_SELLER)
-//                        .anyRequest().authenticated()
-//                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) ->
-//                                response.sendRedirect("/account/login"))
-//                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-//                            getError(accessDeniedException);
-//                            getInfo(request);
-//                        })
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
-//                        .expiredUrl("/account/login")
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http,
-                                                       PasswordEncoder encoder,
-                                                       UserDetailsService userDetailsService) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http
-                .getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(encoder);
-
-        return authenticationManagerBuilder.build();
+    public SecurityFilterChain quantitiesSoldFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/quantity/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/quantity/delete"
+                        ).hasAnyRole(ROLE_SELLER)
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/account/login"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            getError(accessDeniedException);
+                            getInfo(request);
+                        })
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1) // 1 user can access with only 1 device, if he/she try to use with 2 or more, the previous session will immediately be canceled.
+                        .expiredUrl("/account/login")
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     private void getInfo(@NotNull HttpServletRequest request) {

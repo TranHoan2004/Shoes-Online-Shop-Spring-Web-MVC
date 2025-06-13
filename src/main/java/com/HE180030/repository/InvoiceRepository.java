@@ -10,7 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
-    List<Invoice> findByAccountId(int accountId);
-
     void deleteByAccount(Account account);
 }

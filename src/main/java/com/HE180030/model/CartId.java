@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -18,6 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 public class CartId implements Serializable {
+    @Serial
     private static final long serialVersionUID = -8196672450785560028L;
     @NotNull
     @Column(name = "account_id", nullable = false)

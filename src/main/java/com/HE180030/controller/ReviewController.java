@@ -1,6 +1,5 @@
 package com.HE180030.controller;
 
-import com.HE180030.dto.request.DeleteRequest;
 import com.HE180030.dto.request.IdRequest;
 import com.HE180030.dto.response.ApiResponse;
 import com.HE180030.service.ReviewService;
