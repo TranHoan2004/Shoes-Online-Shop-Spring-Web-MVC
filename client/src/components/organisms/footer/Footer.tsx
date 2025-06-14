@@ -1,4 +1,5 @@
 import FooterElements from "../../molecules/footer/FooterElements";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const Footer = () => {
     return (

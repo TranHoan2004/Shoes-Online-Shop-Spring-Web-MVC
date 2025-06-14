@@ -1,10 +1,13 @@
 import './App.css'
+import Menu from './components/organisms/menu/Menu'
+// import Footer from './components/organisms/footer/Footer'
 
 function App() {
 
   return (
     <>
-      Hehe
+      {/* <Footer /> */}
+      <Menu />
     </>
   )
 }
